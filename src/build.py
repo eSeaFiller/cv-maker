@@ -13,6 +13,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 ANCHOR = '<script>\n(function(){\n  "use strict";'
 
+HEADER = ('<!--\n  CV Maker — 简历制作器\n  Copyright (c) 2026 XuJianghao\n  Released under the MIT License — https://github.com/eSeaFiller/cv-maker\n  内联的 pdf.js 版权归 Mozilla Foundation 所有，遵循 Apache License 2.0。\n-->\n')
+
 
 def read(path):
     with open(path, encoding="utf-8") as f:
@@ -38,7 +40,8 @@ def main():
     body = src.replace(ANCHOR, libs + ANCHOR, 1)
 
     page = (
-        '<!doctype html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n'
+        '<!doctype html>\n' + HEADER +
+        '<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         "</head>\n<body>\n" + body + "\n</body>\n</html>\n"
     )

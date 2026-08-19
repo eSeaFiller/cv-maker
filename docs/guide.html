@@ -1,4 +1,10 @@
 <!doctype html>
+<!--
+  CV Maker — 简历制作器
+  Copyright (c) 2026 XuJianghao
+  Released under the MIT License — https://github.com/eSeaFiller/cv-maker
+  内联的 pdf.js 版权归 Mozilla Foundation 所有，遵循 Apache License 2.0。
+-->
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -140,7 +146,7 @@
 
   <dl class="specs">
     <div class="spec"><dt>体积</dt><dd class="num">1.4 MB<small>含内置 PDF 解析库</small></dd></div>
-    <div class="spec"><dt>外部请求</dt><dd class="num">1<small>仅首次打开计一次数，可关</small></dd></div>
+    <div class="spec"><dt>外部请求</dt><dd class="num">2<small>打开与离开各一次，可关</small></dd></div>
     <div class="spec"><dt>安装步骤</dt><dd class="num">0<small>双击 .html 即可</small></dd></div>
     <div class="spec"><dt>数据外传</dt><dd class="num">0<small>简历只留在你的浏览器</small></dd></div>
   </dl>
@@ -272,8 +278,11 @@
 
   <h2>几点实话</h2>
   <div class="note">
-    <p><strong>会计一次数。</strong>首次打开时向作者的服务器发一次<b>空请求</b>，用来知道有多少人在用 ——
-      不含 id、设备信息或简历的任何内容，此后不再发送，也可以在面板里关掉。除此之外没有任何对外请求。</p>
+    <p><strong>会统计使用情况。</strong>打开时和离开时各向作者的服务器上报一次，用来知道有多少人在用、
+      每天有多少人、大致来自哪个国家、一次用多久。上报的全部内容就是三样：一个随机生成的匿名编号、
+      一个本次会话的编号、这次实际停留的秒数 —— 国家是服务器自己看到的，不由本机发出。
+      <b>不含设备信息，也不含简历的任何字节</b>，服务端不写日志。「关于」卡片里可以随时关掉，
+      关掉之后连那个匿名编号都不会生成。除此之外没有任何对外请求。</p>
     <p><strong>数据存在浏览器本地。</strong>换电脑、换浏览器、清缓存都会丢。重要版本请用「导出备份文件」存一份 <code>.json</code> 到别处。</p>
     <p><strong>体积 1.4 MB，其中 1.34 MB 是 PDF 解析库。</strong>这是支持直接拖 PDF 进来的代价；不需要这个功能的话，它本可以只有 110 KB。</p>
     <p><strong>导入解析靠规则，不是 AI。</strong>格式规整的简历还原度很高，排版古怪的可能需要手动挪几行 —— 但认不出的行会保留成要点，<strong>不会丢内容</strong>，导入前也会自动存一版备份。</p>

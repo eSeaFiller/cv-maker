@@ -26,7 +26,7 @@ Or skip the fiddling and press *Fill one page*: a binary search finds the looses
 |---|---|
 | **One file** | The whole tool is a 1.5 MB `.html` with pdf.js inlined. Mail it, AirDrop it, drop it in chat — the other person double-clicks and it runs |
 | **Works offline** | No external service, so it keeps working on a plane, and it will still open years from now |
-| **Your résumé never leaves the machine** | Text, photo and every saved version live in your own browser's localStorage (the one network request is described [below](#data-and-privacy)) |
+| **Your résumé never leaves the machine** | Text, photo and every saved version live in your own browser's localStorage (everything the tool does send is described [below](#data-and-privacy)) |
 | **What you edit is what prints** | Editing height must equal print height. Every "+" button is absolutely positioned and takes no space; empty fields vanish completely in preview and print |
 
 ## What it does
@@ -90,7 +90,7 @@ Static HTML is tagged `data-i18n="key"`, with the Chinese left in the tag and sw
 ## Data and privacy
 
 - Your text, photo and every version are written to this browser's `localStorage` and **never uploaded**. Clearing site data clears them too, so export a `.json` backup for anything you care about.
-- On its **first open** the tool sends one **empty request** to the author's server, purely to count how many people use it — no id, no device information, not a byte of your résumé. It never sends anything again, and the switch is in the About card.
+- The tool reports once when it **opens** and once when you **leave**, to count how many people use it, how many on a given day, roughly which country they are in, and how long a session runs. Everything it sends is: one randomly generated anonymous id, an id for this session, and the number of seconds the session actually lasted. The country is what Cloudflare's edge sees, not something the page sends. **No device information, not a byte of your résumé, and no server-side logs.** The switch is in the About card; with it off, not even the anonymous id is generated.
 - **If you fork this, blank out `HIT_URL`** (search `var HIT_URL` in `src/source.html`), or your deployment will report into the author's counter. Blank means the feature does not exist at all.
 
 ## Licence

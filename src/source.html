@@ -337,7 +337,7 @@
   .paper[data-lang="en"] .nm{letter-spacing:.02em}
   .paper[data-lang="en"] .sec-t{letter-spacing:.09em}
   .paper[data-lang="en"][data-hstyle="plain"] .sec-t{letter-spacing:.15em}
-  .paper[data-lang="en"] .chip{min-width:0;padding:1px 8px}
+  .paper[data-lang="en"] .chip{min-width:0;padding:0 7px}
   .paper[data-lang="en"] .r-org,.paper[data-lang="en"] .nm{font-feature-settings:"kern" 1}
 
   /* ---- 版式风格：正文字体 ---- */
@@ -385,7 +385,13 @@
   body.editing .bl-in:empty::after{content:attr(data-ph);color:var(--ph)}
   /* 删除键是 li 的子节点、可编辑区的兄弟 —— 绝不能放进可编辑区里面 */
   /* 放右侧：左边留给条目/板块的工具栏，两者不再打架 */
-  .bl-del{position:absolute;left:100%;top:calc(var(--lh) * .5em - 10px);margin-left:5px;
+  .bl-grip{position:absolute;left:100%;top:calc(var(--lh) * .5em - 10px);margin-left:5px;
+    opacity:0;pointer-events:none;transition:opacity .12s}
+  .bl-grip::after{content:"";position:absolute;right:100%;top:-4px;bottom:-4px;width:8px}
+  body.editing .bl li:hover > .bl-grip,body.editing .bl-grip:hover,
+  body.editing .bl-grip:focus-visible{opacity:1;pointer-events:auto}
+
+  .bl-del{position:absolute;left:100%;top:calc(var(--lh) * .5em - 10px);margin-left:31px;
     opacity:0;pointer-events:none;transition:opacity .12s}
   .bl-del::after{content:"";position:absolute;right:100%;top:-4px;bottom:-4px;width:8px}
   body.editing .bl li:hover > .bl-del,body.editing .bl-del:hover,
@@ -409,8 +415,10 @@
 
   .chip-row{display:flex;align-items:flex-start;gap:11px;margin-bottom:var(--gap-bullet)}
   .chip{
-    flex:none;background:var(--rail);color:var(--paper);font-size:calc(var(--fs) * .92);font-weight:600;
-    padding:1px 9px;border-radius:3px;min-width:52px;text-align:center
+    flex:none;background:var(--chip-bg, var(--rail));color:var(--chip-fg, var(--paper));
+    border:1px solid var(--chip-bd, transparent);
+    font-size:calc(var(--fs) * .92);font-weight:600;
+    padding:0 8px;border-radius:3px;min-width:52px;text-align:center
   }
   .chip-txt{flex:1;min-width:0}
 
@@ -426,8 +434,11 @@
   /* Outside edit mode nothing empty may paint: an empty bullet is a zero-height
      box whose absolutely-positioned dot would otherwise float on its own, and an
      empty chip would print as a solid black bar. */
-  .chip:empty{background:none;min-width:0;padding:0}
-  body.editing .chip:empty{background:var(--rail);min-width:52px;padding:1px 9px}
+  .chip:empty{background:none;border-color:transparent;min-width:0;padding:0}
+  body.editing .chip:empty{
+    background:var(--chip-bg, var(--rail));border-color:var(--chip-bd, transparent);
+    min-width:52px;padding:0 8px
+  }
   .chip.ed:focus{box-shadow:inset 0 0 0 1.5px var(--accent)}
 
   /* The gap to the left of the buttons is padding, not margin, so the toolbar's
@@ -544,7 +555,8 @@
        or placeholders and empty chips end up on the paper */
     .ed:empty::before,.ed:empty::after,.bl-in:empty::after{content:none !important}
     .bl li:has(> .bl-in:empty)::before{content:none !important}
-    .chip:empty{background:none !important;min-width:0 !important;padding:0 !important}
+    .chip:empty{background:none !important;border-color:transparent !important;
+                min-width:0 !important;padding:0 !important}
     .note:empty{display:none !important}
     .sum:empty{display:none !important}
     .ct.empty{display:none !important}
@@ -640,6 +652,16 @@
         <button data-a="green" style="--sw:#1f4d3a" aria-pressed="false" title="松绿" aria-label="松绿" data-i18n-attr="title:c.green,aria-label:c.green"></button>
         <button data-a="wine"  style="--sw:#6d2230" aria-pressed="false" title="酒红" aria-label="酒红" data-i18n-attr="title:c.wine,aria-label:c.wine"></button>
       </div>
+      <p class="sub-t" data-i18n="s.chip" style="margin-top:12px">标签底色</p>
+      <div class="swatches" id="chipsel">
+        <button data-c="auto"  aria-pressed="true"  title="跟随主题色" aria-label="跟随主题色" data-i18n-attr="title:c.auto,aria-label:c.auto"></button>
+        <button data-c="ink"   style="--sw:#16181b" aria-pressed="false" title="墨黑" aria-label="墨黑" data-i18n-attr="title:c.ink,aria-label:c.ink"></button>
+        <button data-c="navy"  style="--sw:#1c3f6e" aria-pressed="false" title="藏青" aria-label="藏青" data-i18n-attr="title:c.navy,aria-label:c.navy"></button>
+        <button data-c="green" style="--sw:#1f4d3a" aria-pressed="false" title="松绿" aria-label="松绿" data-i18n-attr="title:c.green,aria-label:c.green"></button>
+        <button data-c="wine"  style="--sw:#6d2230" aria-pressed="false" title="酒红" aria-label="酒红" data-i18n-attr="title:c.wine,aria-label:c.wine"></button>
+        <button data-c="grey"  style="--sw:#e6e9ed" aria-pressed="false" title="浅灰" aria-label="浅灰" data-i18n-attr="title:c.grey,aria-label:c.grey"></button>
+        <button data-c="white" style="--sw:#ffffff" aria-pressed="false" title="白色" aria-label="白色" data-i18n-attr="title:c.white,aria-label:c.white"></button>
+      </div>
     </div>
 
     <div class="grp">
@@ -713,7 +735,9 @@
       <p class="hint" data-i18n="h.keys">
         编辑要点时：<kbd>Enter</kbd> 新增一条（和当前这条同级），<kbd>Tab</kbd> 把它降成子要点（空心小圈），
         <kbd>⇧Tab</kbd> 退回上一级；空条按 <kbd>⌫</kbd> 删除（空的子要点先退回一级），选中文字 <kbd>⌘B</kbd> 加粗。<br>
+        <kbd>⌘Z</kbd> 撤销上一步，<kbd>⇧⌘Z</kbd> 重做。<br>
         鼠标停在板块标题或条目左侧会浮出一列小按钮，按住最上面那个六点手柄就能把整段拖到别的位置；下面的 ↑ ↓ × 可以逐格移动或删除。
+        停在某一条要点上，它右边会出现六点手柄和删除键，拖手柄就能把这条要点挪到同一条经历里的任意位置。
         点联系方式前面的小图标，会弹出电话／手机／邮箱／LinkedIn／网址／所在地六个图标供你挑。
       </p>
     </div>
@@ -812,7 +836,8 @@
       <div class="tut-item"><b>导入已有简历</b><span>上传 .pdf / .docx / .txt / .md，或粘贴文本，自动拆成板块、经历、要点；导入前会先给你预览</span></div>
       <div class="tut-item"><b>四级间距</b><span>板块、条目、要点、抬头留白各有滑杆，另有字号、行高、页边距</span></div>
       <div class="tut-item"><b>排满 N 页</b><span>内容超了自动收紧，不够自动撑开，正好落在一页或两页里</span></div>
-      <div class="tut-item"><b>整段拖动</b><span>停在板块或条目左侧，按住六点手柄就能把整段拖去别处</span></div>
+      <div class="tut-item"><b>整段拖动</b><span>停在板块或条目左侧，按住六点手柄就能把整段拖去别处；每条要点右侧也有自己的手柄，可以在本条经历里随意换位置</span></div>
+      <div class="tut-item"><b>撤销</b><span><kbd>⌘Z</kbd> 退回上一步，<kbd>⇧⌘Z</kbd> 重做。增删、拖动、导入、清空都能退</span></div>
       <div class="tut-item"><b>版式风格</b><span>板块标题三种样式 × 中英文字体 × 四种主题色，标题底色随主题一起变</span></div>
       <div class="tut-item"><b>中英文双语</b><span>英文板块名和 Sep 2022 - Present 这类日期都认，导入英文简历会自动换成拉丁排版</span></div>
       <div class="tut-item"><b>多版本</b><span>按公司存档并命名，随时切回；未写回的改动有小蓝点提醒</span></div>
@@ -844,9 +869,10 @@
       <dt data-i18n="about.contact">问题反馈</dt><dd>xujianghao2026@gmail.com</dd>
     </dl>
     <div class="tele-note" id="tele-note" hidden>
-      <p data-i18n="about.tele">本工具在<b>首次打开</b>时向作者的服务器发送一次<b>空请求</b>，用于统计有多少人在用 ——
-      不包含任何 id、设备信息或简历内容，此后不再发送。</p>
-      <label class="chk tele"><input type="checkbox" id="tele"> <span data-i18n="k.tele">允许匿名启动计数</span></label>
+      <p data-i18n="about.tele">本工具在<b>打开</b>和<b>离开</b>时各向作者的服务器上报一次，用于统计有多少人在用、
+      每天有多少人、大致来自哪个国家、一次用多久。上报的全部内容就是：一个随机生成的匿名编号、本次停留的秒数
+      （国家是服务器自己看到的，不由本机发出）。<b>不含设备信息，也不含简历的任何字节。</b></p>
+      <label class="chk tele"><input type="checkbox" id="tele"> <span data-i18n="k.tele">允许匿名使用统计</span></label>
     </div>
     <p class="rights">© 2026 XuJianghao · MIT License</p>
     <div class="btns" style="margin-top:16px">
@@ -922,15 +948,21 @@
 
   var DEF_OPTS = {oneLine:true, photoOn:true, photoSide:"right",
                   hstyle:"band", font:"sans", accent:"ink", latin:"auto",
-                  centerPage:true, lang:"zh", telemetry:true, smartBreak:true,
+                  centerPage:true, lang:"zh", telemetry:true, smartBreak:true, chip:"auto",
                   // 第一次打开时跟随浏览器语言；之后以用户自己的选择为准
                   ui: /^zh\b/i.test(navigator.language || "") ? "zh" : "en"};
 
   // Font fallback is per-character: a latin-only family listed first claims the
   // ASCII, and the CJK family behind it picks up everything else.
+  // 末尾这几个是保险丝：只有前面全都匹配不上才轮得到它们，所以在正常机器上
+  // 一个像素都不会变。加它们是因为有人反馈打印时中文整片消失 —— 那台机器上
+  // 苹方大概是被停用或缺失了，与其把最后一步交给浏览器的兜底，不如自己多点名
+  // 几个真实存在的字体（Heiti SC / 华文黑体是 macOS 的老牌中文字体）。
   var CJK_FONT = {
-    sans:'-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif',
-    serif:'"Songti SC","STSong","SimSun","Noto Serif SC",Georgia,serif'
+    sans:'-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",' +
+         '"Heiti SC","STHeiti","Source Han Sans SC","Noto Sans CJK SC","WenQuanYi Micro Hei",sans-serif',
+    serif:'"Songti SC","STSong","SimSun","Noto Serif SC",' +
+          '"Source Han Serif SC","Noto Serif CJK SC","STFangsong",Georgia,serif'
   };
   var LATIN_FONT = {
     auto:"",
@@ -941,6 +973,17 @@
     palatino:'"Palatino Linotype",Palatino,"Book Antiqua",Georgia'
   };
   var ACCENTS = {ink:"#16181b", navy:"#1c3f6e", green:"#1f4d3a", wine:"#6d2230"};
+  // 标签底色可以脱离主题色单独选。浅色和白色配深字加一道边框，
+  // 边框是 border 不是背景 —— 读者关掉「背景图形」也还看得见。
+  var CHIPS = {
+    auto:  null,                                        // 跟随主题色
+    ink:   {bg:"#16181b", fg:"#ffffff"},
+    navy:  {bg:"#1c3f6e", fg:"#ffffff"},
+    green: {bg:"#1f4d3a", fg:"#ffffff"},
+    wine:  {bg:"#6d2230", fg:"#ffffff"},
+    grey:  {bg:"#e6e9ed", fg:"#22262d", bd:"#d3d9e0"},
+    white: {bg:"#ffffff", fg:"#16181b", bd:"#c2cad3"}
+  };
   // the title bar is a pale wash of the same hue, so the whole strip reads as one choice
   var BANDS   = {ink:"#edeff1", navy:"#e9eef5", green:"#e8f0ea", wine:"#f4eaec"};
 
@@ -1015,6 +1058,7 @@
     "你的姓名":"Your name", "这条经历":"this entry",
     /* 工具提示与确认 */
     "拖动整个板块换位置":"Drag the whole section", "拖动这条经历换位置":"Drag this entry",
+    "拖动这条要点换位置":"Drag this bullet",
     "上移板块":"Move section up", "下移板块":"Move section down", "删除板块":"Delete section",
     "上移条目":"Move entry up", "下移条目":"Move entry down", "删除整条经历":"Delete this entry",
     "上移":"Move up", "下移":"Move down", "删除":"Delete",
@@ -1141,6 +1185,7 @@
     "s.latin":"Latin & figures", "o.auto":"Follow the CJK face",
     "s.accent":"Accent colour",
     "c.ink":"Ink black", "c.navy":"Navy", "c.green":"Pine green", "c.wine":"Wine red",
+    "s.chip":"Label colour", "c.auto":"Follow the accent", "c.grey":"Light grey", "c.white":"White",
 
     "g.header":"HEADER",
     "k.center":"Centre the name on the page", "k.oneline":"Contacts on one line", "k.photo":"Show photo",
@@ -1161,7 +1206,7 @@
     "h.file":"“Export backup file” writes the current draft and every version into one .json; use “Restore from file” after switching machines or clearing the cache.",
     "b.data":"Backup data (text)", "b.reset":"Reset to original",
     "h.print":"If the print button does nothing, use your browser’s own Print, choose A4 and set margins to none.",
-    "h.keys":"While editing bullets: <kbd>Enter</kbd> adds one at the same level, <kbd>Tab</kbd> demotes it to a sub-bullet (hollow circle), <kbd>⇧Tab</kbd> promotes it back; <kbd>⌫</kbd> on an empty one removes it (an empty sub-bullet is promoted first), <kbd>⌘B</kbd> bolds the selection.<br>Hover to the left of a section heading or an entry and a small toolbar appears; hold the six-dot handle at the top to drag the whole block elsewhere, and use ↑ ↓ × below it to nudge or delete. Click the icon in front of a contact line to choose between phone, mobile, email, LinkedIn, website and location.",
+    "h.keys":"While editing bullets: <kbd>Enter</kbd> adds one at the same level, <kbd>Tab</kbd> demotes it to a sub-bullet (hollow circle), <kbd>⇧Tab</kbd> promotes it back; <kbd>⌫</kbd> on an empty one removes it (an empty sub-bullet is promoted first), <kbd>⌘B</kbd> bolds the selection.<br><kbd>⌘Z</kbd> undoes the last step, <kbd>⇧⌘Z</kbd> redoes it.<br>Hover to the left of a section heading or an entry and a small toolbar appears; hold the six-dot handle at the top to drag the whole block elsewhere, and use ↑ ↓ × below it to nudge or delete. Click the icon in front of a contact line to choose between phone, mobile, email, LinkedIn, website and location.",
     "t.resizer":"Drag to resize the panel, double-click to reset",
     "a.resizer":"Resize the panel: arrow keys nudge it, double-click resets",
 
@@ -1183,7 +1228,8 @@
       '<div class="tut-item"><b>Import a resume</b><span>Upload .pdf / .docx / .txt / .md, or paste text; it is split into sections, entries and bullets, with a preview before anything changes</span></div>' +
       '<div class="tut-item"><b>Four spacing levels</b><span>Sections, entries, bullets and header space each get a slider, plus size, leading and margins</span></div>' +
       '<div class="tut-item"><b>Fill N pages</b><span>Too much tightens, too little opens up, landing exactly on one page or two</span></div>' +
-      '<div class="tut-item"><b>Drag to reorder</b><span>Hover to the left of a section or entry and hold the six-dot handle to move the whole block</span></div>' +
+      '<div class="tut-item"><b>Drag to reorder</b><span>Hover to the left of a section or entry and hold the six-dot handle to move the whole block; every bullet has its own handle on the right for reordering within its entry</span></div>' +
+      '<div class="tut-item"><b>Undo</b><span><kbd>⌘Z</kbd> steps back, <kbd>⇧⌘Z</kbd> steps forward. Adds, deletes, drags, imports and clears are all undoable</span></div>' +
       '<div class="tut-item"><b>Styling</b><span>Three heading treatments × CJK and Latin faces × four accent colours, with the heading band following the accent</span></div>' +
       '<div class="tut-item"><b>Bilingual</b><span>English section names and dates like Sep 2022 - Present are recognised; an imported English resume switches to Latin typography</span></div>' +
       '<div class="tut-item"><b>Versions</b><span>Archive and name one per employer and switch back any time; a blue dot marks edits not yet written back</span></div>' +
@@ -1192,8 +1238,8 @@
     "b.start":"Start",
 
     "about.zh":"Resume layout tool", "about.author":"Author", "about.contact":"Feedback",
-    "about.tele":"On its <b>first open</b> this tool sends one <b>empty request</b> to the author’s server, purely to count how many people use it — no id, no device information, nothing from your resume. It never sends anything again.",
-    "k.tele":"Allow the anonymous first-open count", "b.close":"Close",
+    "about.tele":"This tool reports once when it <b>opens</b> and once when you <b>leave</b>, to count how many people use it, how many on a given day, roughly which country they are in, and how long a session runs. Everything it sends is: one randomly generated anonymous id and the number of seconds this session lasted (the country is what the server itself sees, not something sent from here). <b>No device information, and not a byte of your resume.</b>",
+    "k.tele":"Allow anonymous usage stats", "b.close":"Close",
 
     "imp.title":"Paste text to import",
     "imp.p":"Paste the body of your resume — select-all from a PDF, from Word, or any plain text. The parser recognises sections, entries and bullets as best it can; <b>lines it cannot place are kept as bullets, so nothing is lost</b>.",
@@ -1229,25 +1275,75 @@
   var KEY = "resume-desk-blank-v1";
   var A4 = 1123;
 
-  /* ---------- 启动计数 ----------
-     只在首次打开时发一次空请求，此后永不再发。请求不带任何内容：没有 id、
-     没有简历的任何字节，服务端只做“加一”。留空则整个功能不存在。 */
-  var HIT_URL = "https://cv-maker-counter.xujianghao02.workers.dev/hit";
-  function pingOnce(){
+  /* ---------- 使用统计 ----------
+     打开时上报一次，离开时上报一次。内容只有三样：一个随机生成的匿名编号、
+     一个本次会话的随机编号、这次实际停留的秒数。国家是服务端自己看到的，
+     不由这里上报。没有设备信息，没有简历的任何字节，也不写日志。
+     「关于」卡片里的开关一关就彻底不发；HIT_URL 留空则整个功能不存在。 */
+  var HIT_URL = "https://cv-maker-counter.xujianghao02.workers.dev";
+  var SID = "s" + Math.random().toString(36).slice(2, 10);
+
+  // 匿名编号：纯随机，只用来把同一天里的重复打开算成一个人
+  function anonId(){
+    var k = KEY + "-uid", v = "";
+    try{
+      v = localStorage.getItem(k) || "";
+      if(!v){
+        v = "u" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+        localStorage.setItem(k, v);
+      }
+    }catch(e){ v = "u0"; }
+    return v;
+  }
+
+  function statSend(kind, secs, first){
     if(!HIT_URL) return;
     if(S.opts.telemetry === false) return;
+    if(kind === "close" && !secs) return;   // 一秒都没停留过，没必要占一行
+    var body = JSON.stringify({uid:anonId(), sid:SID, kind:kind, secs:secs, first:first});
     try{
-      if(localStorage.getItem(KEY + "-hit")) return;
-      localStorage.setItem(KEY + "-hit", "1");
-    }catch(e){ return; }
-    try{
-      fetch(HIT_URL, {mode:"no-cors", keepalive:true}).catch(function(){});
+      // 离开时页面已经在关了，普通请求发不出去，得用 sendBeacon
+      if(kind === "close" && navigator.sendBeacon){
+        navigator.sendBeacon(HIT_URL + "/e", new Blob([body], {type:"text/plain"}));
+        return;
+      }
+      fetch(HIT_URL + "/e", {method:"POST", body:body, mode:"no-cors", keepalive:true})
+        .catch(function(){});
     }catch(e){}
+  }
+
+  // 停留时长按“页面真的在前台”算：切去别的标签页就暂停计时
+  var activeMs = 0, visibleSince = document.hidden ? 0 : Date.now();
+  function activeSecs(){
+    return Math.round((activeMs + (visibleSince ? Date.now() - visibleSince : 0)) / 1000);
+  }
+  function stopClock(){
+    if(visibleSince){ activeMs += Date.now() - visibleSince; visibleSince = 0; }
+  }
+  function pingOpen(){
+    var first = false;
+    try{
+      if(!localStorage.getItem(KEY + "-hit")){
+        localStorage.setItem(KEY + "-hit", "1");
+        first = true;      // 服务端只在这一次给累计数加一
+      }
+    }catch(e){}
+    statSend("open", null, first);
+
+    document.addEventListener("visibilitychange", function(){
+      if(document.hidden){ stopClock(); statSend("close", activeSecs()); }
+      else if(!visibleSince){ visibleSince = Date.now(); }
+    });
+    // 同一次会话可能报好几条 close，服务端按会话取最大的那条
+    window.addEventListener("pagehide", function(){
+      stopClock(); statSend("close", activeSecs());
+    });
   }
 
   function clone(o){ return JSON.parse(JSON.stringify(o)); }
 
   var S = load();
+  lastSnap = JSON.stringify(S.data);   // 打开时的样子就是撤销栈的底
   UI_LANG = S.opts.ui === "en" ? "en" : "zh";
   // 第一次打开、浏览器是英文环境：起始模板的板块名和排版也一起用英文
   if(UI_LANG === "en" && !fromStorage){
@@ -1278,10 +1374,40 @@
             zoom:100, guides:true, mode:"edit", activeId:null, panelW:338};
   }
 
+  /* ---------- 撤销 / 重做 ---------- */
+  var UNDO = [], REDO = [], lastSnap = null, UNDO_MAX = 80;
+  function snapNow(){ return JSON.stringify(S.data); }
+  function noteChange(){
+    var now = snapNow();
+    if(lastSnap === null){ lastSnap = now; return; }
+    if(now === lastSnap) return;
+    UNDO.push(lastSnap);
+    if(UNDO.length > UNDO_MAX) UNDO.shift();
+    REDO.length = 0;               // 新的改动出现，原来那条重做线就断了
+    lastSnap = now;
+  }
+  function restoreData(json){
+    S.data = JSON.parse(json);
+    lastSnap = snapNow();          // 先认下这一版，免得下一次 save 把回退本身也记成一步
+    render(); applyStyle(); save();
+  }
+  function undo(){
+    noteChange();                  // 还在防抖里没记下的那一笔，先补上
+    if(!UNDO.length) return;
+    REDO.push(snapNow());
+    restoreData(UNDO.pop());
+  }
+  function redo(){
+    if(!REDO.length) return;
+    UNDO.push(snapNow());
+    restoreData(REDO.pop());
+  }
+
   var saveTimer;
   function save(){
     clearTimeout(saveTimer);
     saveTimer = setTimeout(function(){
+      noteChange();
       try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
       refreshDirty();
     }, 350);
@@ -1701,13 +1827,15 @@
     '<circle cx="3" cy="7" r="1.2"/><circle cx="7" cy="7" r="1.2"/>' +
     '<circle cx="3" cy="11" r="1.2"/><circle cx="7" cy="11" r="1.2"/></svg>';
 
-  function grip(kind, si, ei){
+  function grip(kind, si, ei, bi){
     var b = el("button","tool grab");
     b.innerHTML = GRIP_SVG;
     b.type = "button";
-    b.title = kind === "sec" ? T("拖动整个板块换位置") : T("拖动这条经历换位置");
+    b.title = kind === "sec"   ? T("拖动整个板块换位置")
+            : kind === "entry" ? T("拖动这条经历换位置")
+            :                    T("拖动这条要点换位置");
     b.setAttribute("aria-label", b.title);
-    b.addEventListener("pointerdown", function(e){ startDrag(e, kind, si, ei); });
+    b.addEventListener("pointerdown", function(e){ startDrag(e, kind, si, ei, bi); });
     return b;
   }
   function addBtn(label, cls, fn){
@@ -1933,6 +2061,9 @@
       var box = ed("div","bl-in", base + ".bullets." + bi + ".t", T("写一条成果"));
       box.dataset.bullet = si + "," + ei + "," + bi;
       li.appendChild(box);
+      var bg = grip("bullet", si, ei, bi);
+      bg.classList.add("bl-grip");
+      li.appendChild(bg);
       li.appendChild(tool("×",T("删除这条要点"),"del bl-del", (function(idx){
         return function(){
           S.data.sections[si].entries[ei].bullets.splice(idx, 1);
@@ -2002,13 +2133,21 @@
   }
 
   /* ---------- drag to reorder ---------- */
-  function startDrag(e, kind, si, ei){
+  function startDrag(e, kind, si, ei, bi){
     if(S.mode !== "edit" || e.button !== 0) return;
     e.preventDefault();
 
     var secs = [].slice.call(paper.querySelectorAll(".sec"));
-    var items = kind === "sec" ? secs : [].slice.call(secs[si].querySelectorAll(".entry"));
-    var from = kind === "sec" ? si : ei;
+    var items, from;
+    if(kind === "sec"){
+      items = secs; from = si;
+    }else if(kind === "entry"){
+      items = [].slice.call(secs[si].querySelectorAll(".entry")); from = ei;
+    }else{
+      // 要点只在自己这条经历里换位置：跨条目搬要点几乎总是误操作
+      items = [].slice.call(secs[si].querySelectorAll(".entry")[ei].querySelectorAll(".bl li"));
+      from = bi;
+    }
     var src = items[from];
     if(!src) return;
 
@@ -2046,7 +2185,9 @@
 
       var dest = to > from ? to - 1 : to;
       if(dest === from) return;
-      var arr = kind === "sec" ? S.data.sections : S.data.sections[si].entries;
+      var arr = kind === "sec"   ? S.data.sections
+              : kind === "entry" ? S.data.sections[si].entries
+              :                    S.data.sections[si].entries[ei].bullets;
       arr.splice(dest, 0, arr.splice(from, 1)[0]);
       render(); save();
     }
@@ -2164,6 +2305,18 @@
     }
   }
 
+  // 纸面上到处是 contenteditable，浏览器原生的撤销只在单个可编辑块里有效，
+  // 而这个工具动不动就重画整张纸，原生历史立刻就断了 —— 所以自己接管。
+  document.addEventListener("keydown", function(e){
+    if(!(e.metaKey || e.ctrlKey)) return;
+    var k = (e.key || "").toLowerCase();
+    if(k !== "z" && k !== "y") return;
+    var t = e.target;
+    if(t && (t.tagName === "TEXTAREA" || t.tagName === "INPUT")) return;   // 弹窗里的输入框还给浏览器
+    e.preventDefault();
+    if(k === "y" || e.shiftKey) redo(); else undo();
+  });
+
   function caretTo(n){
     if(!n) return;
     n.focus();
@@ -2237,6 +2390,13 @@
       (latin ? latin + "," : "") + (CJK_FONT[S.opts.font] || CJK_FONT.sans));
     paper.style.setProperty("--rail", ACCENTS[S.opts.accent] || ACCENTS.ink);
     paper.style.setProperty("--band", BANDS[S.opts.accent] || BANDS.ink);
+    var chip = CHIPS[S.opts.chip];
+    ["--chip-bg","--chip-fg","--chip-bd"].forEach(function(v){ paper.style.removeProperty(v); });
+    if(chip){
+      paper.style.setProperty("--chip-bg", chip.bg);
+      paper.style.setProperty("--chip-fg", chip.fg);
+      paper.style.setProperty("--chip-bd", chip.bd || "transparent");
+    }
     fitContacts();
     applyZoom();
     scheduleGuides();
@@ -2784,6 +2944,9 @@
   }
   var latinSel = document.getElementById("latinsel");
   function syncStyleUI(){
+    pressGroup("#chipsel", "c", S.opts.chip || "auto");
+    var autoSw = document.querySelector('#chipsel [data-c="auto"]');
+    if(autoSw) autoSw.style.setProperty("--sw", ACCENTS[S.opts.accent] || ACCENTS.ink);
     pressGroup("#hstyle", "h", S.opts.hstyle || "band");
     pressGroup("#fontsel", "f", S.opts.font || "sans");
     pressGroup("#accent", "a", S.opts.accent || "ink");
@@ -2804,6 +2967,10 @@
   document.getElementById("fontsel").addEventListener("click", function(e){
     var b = e.target.closest("button"); if(!b) return;
     S.opts.font = b.dataset.f; syncStyleUI(); applyStyle(); save();
+  });
+  document.getElementById("chipsel").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    S.opts.chip = b.dataset.c; syncStyleUI(); applyStyle(); save();
   });
   document.getElementById("accent").addEventListener("click", function(e){
     var b = e.target.closest("button"); if(!b) return;
@@ -3068,7 +3235,7 @@
       S.opts.telemetry = tele.checked; save();
     });
   }
-  pingOnce();
+  pingOpen();
 
   var tsheet = document.getElementById("tsheet");
   var TUT_SEEN = KEY + "-tut";
