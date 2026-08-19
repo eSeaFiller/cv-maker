@@ -3,7 +3,7 @@
 > A résumé typesetting tool that is one HTML file. Click the text to rewrite it, turn the sliders for density, fill the page in one click.
 > No account, no backend, no build toolchain — double-click to use, works offline.
 
-**[Use it online](https://cv-maker-amp.pages.dev)** · [Download the single file](cv-maker.html) · [Guide (Chinese)](docs/guide.html) · [中文说明](README.md)
+**[Use it online](https://cv-maker-amp.pages.dev)** · **[Download the single file](https://github.com/eSeaFiller/cv-maker/releases/latest/download/cv-maker.html)** · [Guide (Chinese)](docs/guide.html) · [中文说明](README.md)
 
 ![The CV Maker window: layout sliders on the left, a real A4 sheet on the right](docs/screenshot.png)
 
