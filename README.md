@@ -3,7 +3,7 @@
 > 一个 HTML 文件的简历排版工具。正文点开就改，疏密交给滑杆，一键把内容排满整页。
 > 没有账号、没有后端、没有构建工具链 —— 双击就能用，断网也能用。
 
-**[在线使用](https://cv-maker-amp.pages.dev)** · **[下载单文件](https://github.com/eSeaFiller/cv-maker/releases/latest/download/cv-maker.html)** · [使用手册](docs/guide.html) · [English](README.en.md)
+**[在线使用](https://cv-maker-amp.pages.dev)** · **[下载单文件](https://github.com/eSeaFiller/cv-maker/releases/latest/download/cv-maker.html)** · [English](README.en.md)
 
 ![CV Maker 界面：左边是排版滑杆，右边是真实的 A4 纸面](docs/screenshot.png)
 
@@ -45,6 +45,8 @@ CV Maker 把这两件事拆开：
 ## 怎么用
 
 **方式一**：打开 <https://cv-maker-amp.pages.dev>。
+
+工具里点左上角「使用教程」有一份带插图的上手说明；仓库里的 [`docs/guide.html`](docs/guide.html) 是同一份内容的独立页面，下载下来用浏览器打开即可。
 
 **方式二**：从 [Releases](https://github.com/eSeaFiller/cv-maker/releases/latest) 下载 `cv-maker.html`，双击。就这一个文件，放哪儿都行。
 
