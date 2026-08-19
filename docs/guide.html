@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<title>CV Maker 使用手册</title>
+<style>
+  :root{
+    --bg:#f2f4f6; --card:#ffffff; --line:#dde2e8; --line-soft:#e9edf1;
+    --ink:#1e232a; --ink-2:#4d5560; --muted:#727b87;
+    --accent:#2f6f8f; --accent-ink:#245a75; --accent-soft:rgba(47,111,143,.10);
+    --band:#edeff1; --rail:#16181b;
+    --shadow:0 1px 2px rgba(20,30,40,.05), 0 14px 36px rgba(20,30,40,.09);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#12151a; --card:#191d23; --line:#2a3038; --line-soft:#232830;
+      --ink:#e4e9ef; --ink-2:#b3bcc7; --muted:#8d97a3;
+      --accent:#6db6d6; --accent-ink:#93cde6; --accent-soft:rgba(109,182,214,.14);
+      --band:#232830; --rail:#6db6d6;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12151a; --card:#191d23; --line:#2a3038; --line-soft:#232830;
+    --ink:#e4e9ef; --ink-2:#b3bcc7; --muted:#8d97a3;
+    --accent:#6db6d6; --accent-ink:#93cde6; --accent-soft:rgba(109,182,214,.14);
+    --band:#232830; --rail:#6db6d6;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px rgba(0,0,0,.45);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.75;
+  }
+  .num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+  .wrap{max-width:760px;margin:0 auto;padding:60px 24px 100px}
+
+  /* hero */
+  .eyebrow{
+    font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--accent-ink);
+    text-transform:uppercase;margin:0 0 16px
+  }
+  h1{
+    margin:0;font-size:clamp(30px,5.4vw,44px);font-weight:700;letter-spacing:.01em;
+    line-height:1.25;text-wrap:balance
+  }
+  .lede{
+    margin:18px 0 0;font-size:clamp(15px,2.1vw,17.5px);line-height:1.8;color:var(--ink-2);
+    max-width:60ch;text-wrap:pretty
+  }
+  .rule{height:1px;background:var(--line);border:0;margin:44px 0}
+
+  h2{
+    margin:52px 0 14px;font-size:19px;font-weight:670;letter-spacing:.01em;
+    display:flex;align-items:center;gap:11px
+  }
+  h2::before{content:"";width:3px;height:1.05em;background:var(--rail);border-radius:1px;flex:none}
+  h3{margin:30px 0 8px;font-size:14.5px;font-weight:650;color:var(--ink)}
+  p{margin:12px 0;max-width:64ch;text-wrap:pretty}
+  strong{font-weight:650}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;
+    background:var(--accent-soft);color:var(--accent-ink);padding:1px 5px;border-radius:4px
+  }
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:11px;padding:20px 22px;
+    margin:20px 0;box-shadow:var(--shadow)
+  }
+  .card > :first-child{margin-top:0}
+  .card > :last-child{margin-bottom:0}
+
+  ul{margin:12px 0;padding-left:0;list-style:none;max-width:64ch}
+  ul li{position:relative;padding-left:19px;margin:7px 0}
+  ul li::before{
+    content:"";position:absolute;left:4px;top:.68em;width:5px;height:5px;
+    border-radius:50%;background:var(--accent);opacity:.65
+  }
+
+  ol{margin:12px 0;padding-left:0;list-style:none;counter-reset:s;max-width:64ch}
+  ol li{position:relative;padding-left:34px;margin:13px 0;counter-increment:s}
+  ol li::before{
+    content:counter(s);position:absolute;left:0;top:.08em;width:22px;height:22px;
+    border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);
+    font-size:11.5px;font-weight:650;display:grid;place-items:center;
+    font-family:ui-monospace,Menlo,monospace
+  }
+
+  .tbl-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+  table{border-collapse:collapse;width:100%;min-width:420px;font-size:14px}
+  th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  thead th{
+    background:var(--band);font-size:11px;font-weight:650;letter-spacing:.1em;
+    color:var(--muted);text-transform:uppercase;white-space:nowrap
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td:first-child{white-space:nowrap;font-weight:600}
+
+  .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:22px 0}
+  .spec{background:var(--card);padding:16px 18px}
+  .spec dt{font-size:10.5px;font-weight:650;letter-spacing:.11em;color:var(--muted);text-transform:uppercase}
+  .spec dd{margin:6px 0 0;font-size:21px;font-weight:660;letter-spacing:.01em}
+  .spec dd small{display:block;font-size:11.5px;font-weight:450;color:var(--muted);letter-spacing:0;margin-top:3px;line-height:1.5}
+
+  .note{
+    border-left:3px solid var(--accent);background:var(--accent-soft);
+    border-radius:0 9px 9px 0;padding:14px 18px;margin:22px 0
+  }
+  .note p{margin:6px 0}
+  .note p:first-child{margin-top:0}
+  .note p:last-child{margin-bottom:0}
+
+  figure{margin:26px 0}
+  figure svg{display:block;width:100%;height:auto}
+  figcaption{margin-top:10px;font-size:12px;color:var(--muted);text-align:center}
+
+  footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+  .subname{margin:6px 0 0;font-size:15px;color:var(--muted);letter-spacing:.04em}
+  .mark{width:40px;height:40px;display:block;color:var(--ink);margin:0 0 18px}
+  @media(max-width:520px){.mark{width:34px;height:34px}}
+</style>
+
+<div class="wrap">
+
+  <svg class="mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M12.5 5.75H30.4L42.25 17.6V39.5a4.75 4.75 0 0 1-4.75 4.75h-25a4.75 4.75 0 0 1-4.75-4.75v-29a4.75 4.75 0 0 1 4.75-4.75Z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><rect x="15.1" y="14.2" width="4" height="20" rx="2" fill="var(--accent)"/><rect x="22.5" y="22" width="12.7" height="4" rx="2" fill="var(--accent)"/></svg>
+  <p class="eyebrow">单文件 · 离线可用</p>
+  <h1>CV Maker</h1>
+  <p class="subname">简历制作器</p>
+  <p class="lede">
+    一个网页版的简历编辑器：正文点开就能改，疏密用滑杆拧，整段可以拖着换位置，
+    一键把内容排满整页。所有东西装在一个 HTML 文件里，双击就能用，不用登录，简历内容不上传。
+  </p>
+
+  <dl class="specs">
+    <div class="spec"><dt>体积</dt><dd class="num">1.4 MB<small>含内置 PDF 解析库</small></dd></div>
+    <div class="spec"><dt>外部请求</dt><dd class="num">1<small>仅首次打开计一次数，可关</small></dd></div>
+    <div class="spec"><dt>安装步骤</dt><dd class="num">0<small>双击 .html 即可</small></dd></div>
+    <div class="spec"><dt>数据外传</dt><dd class="num">0<small>简历只留在你的浏览器</small></dd></div>
+  </dl>
+
+  <hr class="rule">
+
+  <h2>它解决什么</h2>
+  <p>
+    在线简历网站给你模板，但不给你控制权 —— 行距字号是锁死的，内容少了一页下面空一大块，
+    多一行就被挤到第二页。Word 则相反：什么都能改，但牵一发动全身，
+    调完一处得再收拾三处。
+  </p>
+  <p>
+    这个工具把两者拆开：<strong>内容</strong>和<strong>排版</strong>各管各的。
+    正文直接在纸面上改，疏密交给左侧一排滑杆 —— 板块、条目、要点、抬头四个层级各有各的间距，
+    互不干扰。
+  </p>
+
+  <figure>
+    <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="左侧控制面板与右侧 A4 纸面的双栏结构">
+      <rect x="1" y="1" width="638" height="208" rx="9" fill="var(--card)" stroke="var(--line)"/>
+      <!-- panel -->
+      <rect x="1" y="1" width="176" height="208" rx="9" fill="var(--band)"/>
+      <rect x="169" y="1" width="8" height="208" fill="var(--band)"/>
+      <line x1="177" y1="1" x2="177" y2="209" stroke="var(--line)"/>
+      <text x="22" y="30" font-size="11" font-weight="650" fill="var(--ink)">控制面板</text>
+      <g fill="var(--muted)" font-size="9">
+        <text x="22" y="52">板块之间</text><text x="22" y="76">条目之间</text>
+        <text x="22" y="100">要点之间</text><text x="22" y="124">抬头留白</text>
+        <text x="22" y="152">排满一页 / 两页</text><text x="22" y="176">版本 · 导入 · 打印</text>
+      </g>
+      <g stroke="var(--line)" stroke-width="2.5" stroke-linecap="round">
+        <line x1="88" y1="48" x2="152" y2="48"/><line x1="88" y1="72" x2="152" y2="72"/>
+        <line x1="88" y1="96" x2="152" y2="96"/><line x1="88" y1="120" x2="152" y2="120"/>
+      </g>
+      <g fill="var(--accent)">
+        <circle cx="122" cy="48" r="4.5"/><circle cx="104" cy="72" r="4.5"/>
+        <circle cx="112" cy="96" r="4.5"/><circle cx="134" cy="120" r="4.5"/>
+      </g>
+      <!-- paper: always printed-page colours, in either theme -->
+      <rect x="215" y="16" width="180" height="178" rx="3" fill="#ffffff" stroke="#d3d9e0"/>
+      <rect x="231" y="30" width="56" height="7" rx="2" fill="#20242b"/>
+      <rect x="231" y="48" width="148" height="9" rx="2" fill="#edeff1"/>
+      <rect x="231" y="48" width="3" height="9" fill="#20242b"/>
+      <g fill="#ccd3db">
+        <rect x="231" y="66" width="120" height="4" rx="2"/><rect x="231" y="76" width="140" height="4" rx="2"/>
+        <rect x="231" y="94" width="148" height="9" rx="2" fill="#edeff1"/>
+        <rect x="231" y="94" width="3" height="9" fill="#20242b"/>
+        <rect x="231" y="112" width="132" height="4" rx="2"/><rect x="231" y="122" width="144" height="4" rx="2"/>
+        <rect x="231" y="132" width="108" height="4" rx="2"/>
+      </g>
+      <line x1="215" y1="160" x2="395" y2="160" stroke="#2f6f8f" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="399" y="163" font-size="8" fill="#2f6f8f" font-family="ui-monospace,Menlo,monospace">第 2 页</text>
+      <text x="215" y="207" font-size="9" fill="var(--muted)">A4 纸面 · 所见即所印</text>
+      <!-- arrow -->
+      <path d="M186 105 L206 105" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#a)"/>
+      <defs><marker id="a" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+        <path d="M0 0 L7 3.5 L0 7 z" fill="var(--accent)"/></marker></defs>
+      <!-- callouts -->
+      <g font-size="9" fill="var(--muted)">
+        <text x="440" y="52">灰底板块标题</text>
+        <text x="440" y="80">条目 + 右对齐时间</text>
+        <text x="440" y="122">要点，前缀自动加粗</text>
+        <text x="440" y="163">A4 分页参考线</text>
+      </g>
+      <g stroke="var(--line)" stroke-width="1">
+        <line x1="384" y1="52" x2="434" y2="49"/><line x1="376" y1="76" x2="434" y2="77"/>
+        <line x1="368" y1="122" x2="434" y2="119"/>
+      </g>
+    </svg>
+    <figcaption>左边拧参数，右边是真实的 A4 纸面 —— 编辑时看到的高度就是打印出来的高度</figcaption>
+  </figure>
+
+  <h2>能做什么</h2>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>功能</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>逐段编辑</td><td>姓名、时间、城市、每条要点都能直接点开改。要点里 <code>Enter</code> 新增一条，空条 <code>⌫</code> 删除，<code>⌘B</code> 加粗</td></tr>
+        <tr><td>导入已有简历</td><td>上传 <strong>.pdf / .docx / .txt / .md</strong>，或直接粘贴文本，自动解析成板块、经历、要点。解析前先给你预览，导入前自动存一版备份</td></tr>
+        <tr><td>四级间距</td><td>板块之间、条目之间、要点之间、抬头留白各有滑杆，另有字号、行高、页边距、姓名区下移</td></tr>
+        <tr><td>排满 N 页</td><td>超了就收紧，不够就撑开铺满。二分法找“刚好放得下的最松的一组值”，不会一压到底</td></tr>
+        <tr><td>整段拖动</td><td>板块和条目左侧的六点手柄，按住拖到任意位置，蓝色插入线提示落点</td></tr>
+        <tr><td>版式风格</td><td>板块标题三种（灰底条／细线／纯文字）× 中文字体两种（黑体／宋体）× 主题色四种，标题底色随主题；英文与数字可另选字体</td></tr>
+        <tr><td>中英文双语</td><td>英文板块名与 <code>Sep 2022 - Present</code> 这类日期都能解析；导入英文简历会自动切到左对齐、收紧字距的拉丁排版</td></tr>
+        <tr><td>智能分页</td><td>会被页边切开的条目整块挪到下一页，页与页之间留出与上下页边距等宽的天头地脚，正文不会顶到纸边。编辑态就把这段空档画出来，屏幕上看到的空档就是打印出来的空档；不想要可以关掉</td></tr>
+        <tr><td>界面中英文</td><td>面板、教程、提示全套可切换（左上角「English／中文」），纸面上的内容一个字都不动；英文环境第一次打开时自动用英文界面和拉丁排版</td></tr>
+        <tr><td>多版本</td><td>按公司存档并命名，随时切回。改动未写回时有小蓝点提醒，删除需两步确认</td></tr>
+        <tr><td>备份到文件</td><td>把草稿和全部版本导出成一个 <code>.json</code>，换设备或清缓存后读回来；Chrome 还可绑定文件反复覆盖</td></tr>
+        <tr><td>打印</td><td>一键导出 A4 PDF。灰底、黑色标签都能正常印出，空白项不会留下痕迹</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>上手三步</h2>
+  <ol>
+    <li><strong>放内容。</strong>点左侧「导入」把已有简历传进来 —— PDF、Word、纯文本都行，也可以直接在纸面上从头写。</li>
+    <li><strong>调排版。</strong>先点一次「排满一页」，八成就成了。想再松紧一点，拖对应层级的滑杆微调；换个观感就调「版式风格」。</li>
+    <li><strong>存版本、导出。</strong>调好点「存为新版本」并命名（比如 <code>投字节-市场</code>），再点「打印 / 存为 PDF」，纸张选 A4、边距选「无」。</li>
+  </ol>
+
+  <h2>它怎么装下的</h2>
+  <p>
+    整个工具就是一个 <code>.html</code> 文件，样式、逻辑、图标、照片全在里面 ——
+    照片转成了 base64 文本，图标是内联 SVG，字体用系统自带的苹方。
+    打开它只产生一次网络请求：文件本身。
+  </p>
+  <p>
+    唯一的第三方代码是 <strong>pdf.js</strong>（1.34 MB），为了解析 PDF 而<strong>整个内联</strong>进文件里，
+    连它的 worker 也一起 —— 因此解析全程跑在本地，不下载、不外发。
+    应用自身的代码只有 65 KB，样式 23 KB。
+  </p>
+
+  <div class="card">
+    <h3>因此它可以</h3>
+    <ul>
+      <li><strong>断网用</strong> —— 飞机上、地铁里照样编辑和打印（计数发不出去也不影响使用）</li>
+      <li><strong>一个附件发完</strong> —— 微信、邮件、AirDrop 直接甩过去，对方双击就能开</li>
+      <li><strong>不会烂掉</strong> —— 不依赖任何外部服务，几年后打开还是这样</li>
+      <li><strong>简历不外传</strong> —— 正文、照片、版本全部只存在你自己的浏览器里，从不上传</li>
+    </ul>
+  </div>
+
+  <p>
+    连 Word 文档的解析也没用库：<code>.docx</code> 本质是个 zip，
+    浏览器原生的 <code>DecompressionStream</code> 就能解开，读出里面的 <code>document.xml</code>。
+  </p>
+
+  <h2>几点实话</h2>
+  <div class="note">
+    <p><strong>会计一次数。</strong>首次打开时向作者的服务器发一次<b>空请求</b>，用来知道有多少人在用 ——
+      不含 id、设备信息或简历的任何内容，此后不再发送，也可以在面板里关掉。除此之外没有任何对外请求。</p>
+    <p><strong>数据存在浏览器本地。</strong>换电脑、换浏览器、清缓存都会丢。重要版本请用「导出备份文件」存一份 <code>.json</code> 到别处。</p>
+    <p><strong>体积 1.4 MB，其中 1.34 MB 是 PDF 解析库。</strong>这是支持直接拖 PDF 进来的代价；不需要这个功能的话，它本可以只有 110 KB。</p>
+    <p><strong>导入解析靠规则，不是 AI。</strong>格式规整的简历还原度很高，排版古怪的可能需要手动挪几行 —— 但认不出的行会保留成要点，<strong>不会丢内容</strong>，导入前也会自动存一版备份。</p>
+    <p><strong>导入只取文字，不复刻原设计。</strong>PDF 里没有“这是标题栏”这类结构信息，所以版式一律用本工具自己的，再由你挑风格。</p>
+    <p><strong>扫描件不行。</strong>图片型 PDF 没有文字层，会明确提示你，不会静默失败。</p>
+  </div>
+
+  <footer>
+    单个自包含 HTML 文件 · 无第三方依赖 · 数据不出本机<br>
+    <span style="display:inline-block;margin-top:6px">CV Maker 简历制作器 · Designed by Xujianghao · © 2026 XuJianghao</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
