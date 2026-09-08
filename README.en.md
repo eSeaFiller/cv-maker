@@ -34,6 +34,8 @@ Or skip the fiddling and press *Fill one page*: a binary search finds the looses
 | Feature | Notes |
 |---|---|
 | Edit in place | Name, dates, city, every bullet. <kbd>Enter</kbd> adds one, <kbd>Tab</kbd> demotes it to a sub-bullet and <kbd>⇧Tab</kbd> promotes it back, <kbd>⌫</kbd> on an empty one deletes it, <kbd>⌘B</kbd> bolds |
+| Label sections | "+ Label section" at the foot of the sheet adds the languages / tools kind of block — a solid label box on the left (seven colours), one line of content on the right |
+| Copy the bullets | Hover an entry and hit ⧉ in its toolbar: every bullet of that entry lands on the clipboard — `· ` at the top level, an indented `◦ ` for sub-bullets, empty ones skipped |
 | Import a résumé | Upload `.pdf` / `.docx` / `.txt` / `.md`, or paste text; it is split into sections, entries and bullets, with a preview first and an automatic backup version |
 | Four spacing levels | Sliders for sections, entries, bullets and header space, plus size, leading, margins, name size and contact size |
 | Fill N pages | Too much tightens, too little opens up, landing exactly on one page or two |
