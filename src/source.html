@@ -439,7 +439,10 @@
     background:var(--chip-bg, var(--rail));border-color:var(--chip-bd, transparent);
     min-width:52px;padding:0 8px
   }
-  .chip.ed:focus{box-shadow:inset 0 0 0 1.5px var(--accent)}
+  /* 点开标签框时，通用的 body.editing .ed:focus 会盖上一层浅蓝底（选择器权重比 .chip 高），
+     标签自己的深色底没了、白字就糊在浅底上看不见 —— 聚焦这一下把字换成深蓝。
+     纸面在深浅两个主题下都是白的，所以这里写死取 ACCENTS.navy，不跟主题色走。 */
+  .chip.ed:focus{box-shadow:inset 0 0 0 1.5px var(--accent);color:#1c3f6e}
 
   /* The gap to the left of the buttons is padding, not margin, so the toolbar's
      hover box touches the entry — otherwise the cursor crosses a dead strip on
