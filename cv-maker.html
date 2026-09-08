@@ -468,6 +468,7 @@
     width:21px;height:21px;border:1px solid var(--line);background:var(--panel);color:var(--muted);
     border-radius:5px;font-size:11px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0
   }
+  .tool[hidden]{display:none}
   .tool:hover{border-color:var(--accent);color:var(--accent-ink)}
   .tool.del:hover{border-color:#c0504b;color:#c0504b}
   .tool.grab{cursor:grab}
@@ -506,8 +507,9 @@
     opacity:0;pointer-events:none;transition:opacity .12s}
   body.editing .sec:hover .add-entry,body.editing .add-entry:focus-visible{opacity:1;pointer-events:auto}
 
-  .add-sec{position:absolute;left:var(--pad-x);bottom:10px;z-index:3;opacity:.45;transition:opacity .12s}
-  .add-sec:hover,.add-sec:focus-visible{opacity:1}
+  .add-secs{position:absolute;left:var(--pad-x);bottom:10px;z-index:3;display:flex;gap:5px;
+    opacity:.45;transition:opacity .12s}
+  .add-secs:hover,.add-secs:focus-within{opacity:1}
 
   /* ---------- pagination ---------- */
   /* A spacer parks the content that would otherwise straddle a page edge down
@@ -1108,12 +1110,17 @@
     "写一条成果：做了什么 + 拿到什么结果，尽量带数字":
       "Write one achievement: what you did and what came of it, with numbers where you can",
     "标签":"Label", "内容":"Content", "标签：":"Label:",
-    "＋ 新板块":"+ Section", "＋ 新条目":"+ Entry", "＋ 新的一行":"+ Row",
+    "＋ 新板块":"+ Section", "＋ 标签板块":"+ Label section", "＋ 新条目":"+ Entry", "＋ 新的一行":"+ Row",
+    "一条条经历：单位、时间、岗位、要点":"Entry by entry: organisation, dates, role, bullets",
+    "左边一个纯色标签框，右边跟一行内容 —— 语言、工具、证书这类":
+      "A solid label box on the left, one line of content on the right - for languages, tools, certificates",
     "＋ 联系方式":"+ Contact", "＋ 要点":"+ Bullet", "＋ 子要点":"+ Sub-bullet", "＋ 备注":"+ Note", "＋ 简介":"+ Summary",
     "一句话概括：学历与专业、几段经历、语言或技能":
       "One short paragraph: your degree and major, the roles behind you, plus languages or tools",
     "单位/学校":"Organisation", "岗位/专业":"Role",
-    "新板块":"New section", "新单位":"New organisation", "岗位名称":"Role",
+    "新板块":"New section", "语言&技能":"Languages & Skills",
+    "语言：":"Languages:", "工具：":"Tools:",
+    "新单位":"New organisation", "岗位名称":"Role",
     "2026年01月 - 至今":"Jan 2026 - Present", "新的联系方式":"New contact",
     "教育经历":"Education", "实习经历":"Experience", "其他":"Other",
     "你的姓名":"Your name", "这条经历":"this entry",
@@ -1122,6 +1129,8 @@
     "拖动这条要点换位置":"Drag this bullet",
     "上移板块":"Move section up", "下移板块":"Move section down", "删除板块":"Delete section",
     "上移条目":"Move entry up", "下移条目":"Move entry down", "删除整条经历":"Delete this entry",
+    "复制这条经历的所有要点":"Copy every bullet in this entry",
+    "复制不了，手动选中吧":"Could not copy - select the text by hand",
     "上移":"Move up", "下移":"Move down", "删除":"Delete",
     "删除这一项":"Delete this field", "删除这条要点":"Delete this bullet",
     "删除该联系方式":"Delete this contact", "点击挑选图标":"Click to pick an icon",
@@ -1880,7 +1889,7 @@
   }
   function toolbar(list){
     var t = el("div","tools");
-    list.forEach(function(b){ t.appendChild(b); });
+    list.forEach(function(b){ if(b) t.appendChild(b); });
     return t;
   }
   var GRIP_SVG = '<svg viewBox="0 0 10 14" width="9" height="12" fill="currentColor" aria-hidden="true">' +
@@ -1899,9 +1908,10 @@
     b.addEventListener("pointerdown", function(e){ startDrag(e, kind, si, ei, bi); });
     return b;
   }
-  function addBtn(label, cls, fn){
+  function addBtn(label, cls, fn, title){
     var b = el("button","add" + (cls ? " " + cls : ""), label);
     b.type = "button";
+    if(title){ b.title = title; b.setAttribute("aria-label", label + " — " + title); }
     b.addEventListener("click", function(e){ e.preventDefault(); fn(); });
     return b;
   }
@@ -1914,10 +1924,20 @@
     paper.innerHTML = "";
     paper.appendChild(headerEl());
     S.data.sections.forEach(function(sec, si){ paper.appendChild(sectionEl(sec, si)); });
-    paper.appendChild(addBtn(T("＋ 新板块"),"add-sec", function(){
+    var addSecs = el("div","add-secs");
+    addSecs.appendChild(addBtn(T("＋ 新板块"),"add-sec", function(){
       S.data.sections.push({title:T("新板块"), kind:"entry", entries:[blankEntry()]});
       render("sections." + (S.data.sections.length-1) + ".title"); save();
-    }));
+    }, T("一条条经历：单位、时间、岗位、要点")));
+    // 语言、工具、证书这类：左边一个纯色标签框，右边跟一行内容
+    addSecs.appendChild(addBtn(T("＋ 标签板块"),"add-sec", function(){
+      S.data.sections.push({title:T("语言&技能"), kind:"chip", entries:[
+        {label:T("语言："), text:T("内容")},
+        {label:T("工具："), text:T("内容")}
+      ]});
+      render("sections." + (S.data.sections.length-1) + ".title"); save();
+    }, T("左边一个纯色标签框，右边跟一行内容 —— 语言、工具、证书这类")));
+    paper.appendChild(addSecs);
     bind();
     applyMode();
     guides();
@@ -2081,12 +2101,49 @@
     return wrap;
   }
 
+  // 「⧉」整段抄走一条经历的要点：一级（lv 1）前面「· 」，子要点（lv 2）缩进两格换空心圈；空要点不占行
+  function bulletText(en){
+    return (en.bullets || []).map(function(b){
+      var t = strip(b && b.t).trim();
+      return t ? (Number(b.lv) === 2 ? "  \u25e6 " : "\u00b7 ") + t : "";
+    }).filter(function(l){ return l; }).join("\n");
+  }
+  // navigator.clipboard 在 file:// 下不一定有，退回一个临时 textarea + execCommand
+  function copyText(str){
+    if(navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(str);
+    return new Promise(function(ok, no){
+      var ta = el("textarea");
+      ta.value = str;
+      ta.style.cssText = "position:fixed;top:-9999px;opacity:0";
+      document.body.appendChild(ta);
+      ta.select();
+      var done = false;
+      try{ done = document.execCommand("copy"); }catch(err){ done = false; }
+      ta.remove();
+      done ? ok() : no();
+    });
+  }
+  function copyBulletsTool(en){
+    var b = tool("\u29c9", T("复制这条经历的所有要点"), "copy-bl", function(){
+      copyText(bulletText(en)).then(function(){ flashTool(b, "\u2713", T("已复制")); },
+                                    function(){ flashTool(b, "!", T("复制不了，手动选中吧")); });
+    });
+    b.hidden = !bulletText(en);
+    return b;
+  }
+  function flashTool(b, ch, tip){
+    var face = b.textContent, title = b.title;
+    b.textContent = ch; b.title = tip;
+    setTimeout(function(){ b.textContent = face; b.title = title; }, 1400);
+  }
+
   function entryEl(en, si, ei){
     var base = "sections." + si + ".entries." + ei;
     var e = el("div","entry");
 
     e.appendChild(toolbar([
       grip("entry", si, ei),
+      copyBulletsTool(en),
       tool("↑",T("上移条目"),"", function(){ move(S.data.sections[si].entries, ei, -1); render(); save(); }),
       tool("↓",T("下移条目"),"", function(){ move(S.data.sections[si].entries, ei, 1); render(); save(); }),
       tool("×",T("删除整条经历"),"del", function(){
@@ -2290,6 +2347,11 @@
     paper.querySelectorAll(".ed").forEach(function(n){
       n.addEventListener("input", function(){
         set(n.dataset.path, clean(n.innerHTML));
+        if(n.dataset.path.indexOf(".bullets.") > 0){
+          var ent = n.closest(".entry"), cb = ent && ent.querySelector(".copy-bl");
+          if(cb) cb.hidden = ![].slice.call(ent.querySelectorAll(".bl-in"))
+            .some(function(x){ return x.textContent.trim(); });
+        }
         if(n.dataset.path.indexOf("header.contacts") === 0){
           var ct = n.closest(".ct");
           if(ct) ct.classList.toggle("empty", !strip(n.innerHTML).trim());
