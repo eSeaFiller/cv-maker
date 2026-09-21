@@ -224,7 +224,7 @@
   }
 
   /* ---------- resume typography ---------- */
-  .hd{display:flex;align-items:flex-start;gap:20px;margin-bottom:var(--gap-header)}
+  .hd{--hd-gap:20px;display:flex;align-items:flex-start;gap:var(--hd-gap);margin-bottom:var(--gap-header)}
   /* a mirror of the photo column on the far side, so the name centres on the
      page rather than on whatever space the photo left over */
   .hd-spacer{flex:none;width:var(--photo)}
@@ -289,6 +289,10 @@
     color:var(--ink-2);font-size:calc(var(--fs) * .96)
   }
   /* 空自述在预览和打印里不得留痕；只有编辑时按「＋ 简介」显式加出来才占位 */
+  /* 自述的左沿要和下面的板块标题对齐：姓名居中时前面有一格镜像照片的占位，
+     把自述往左拉过那一格（占位宽 + 行内间距），右沿仍是照片左沿。
+     照片在左时占位在右边，自述本来就贴着照片右沿，不用拉。 */
+  .hd-spacer:not(.off) + .hd-main .sum{margin-left:calc(-1 * var(--photo) - var(--hd-gap))}
   .sum:empty{display:none}
   body.editing .sum.show:empty{display:block}
   .paper[data-lang="en"] .sum{text-align:left;hyphens:auto}
