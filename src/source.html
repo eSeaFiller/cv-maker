@@ -406,13 +406,15 @@
   .fld-in{outline:none}
   .row .l.fld{flex:1;min-width:0}
   .row .r.fld{flex:none}
-  /* 删除键一律待在字段自己的框内，永远不会和邻居打架。
-     左对齐字段的右端、右对齐字段的左端本来就是空白，正好放。 */
+  /* 左边那列是 flex:1，右端总有余量，删除键待在框内不碍事。
+     右边那列（时间、城市）是 flex:none，框宽=文字宽，框内没有一点空白 ——
+     删除键放进去就压在文字上，想点文字先点掉了删除键。所以把它挂到字段外面、
+     纸面的右边距里（和经历工具条挂在纸面左外侧是同一个路数）。 */
   .fld-del{position:absolute;top:50%;transform:translateY(-50%);
     opacity:0;pointer-events:none;transition:opacity .12s;z-index:4;
     background:var(--paper);box-shadow:0 0 0 3px var(--paper)}
   .fld-del.at-right{right:1px}
-  .fld-del.at-left{left:1px}
+  .fld-del.at-out{left:100%;margin-left:4px}
   .fld-del::after{content:"";position:absolute;top:-6px;bottom:-6px;left:-6px;right:-6px}
   body.editing .fld:hover > .fld-del,body.editing .fld-del:hover,
   body.editing .fld-del:focus-visible{opacity:1;pointer-events:auto}
@@ -2041,7 +2043,7 @@
     var wrap = el("div","fld " + cls);
     var box = ed("div","fld-in", path, ph);
     wrap.appendChild(box);
-    var x = tool("×",T("删除这一项"),"del fld-del " + (side === "left" ? "at-left" : "at-right"), function(){
+    var x = tool("×",T("删除这一项"),"del fld-del " + (side === "out" ? "at-out" : "at-right"), function(){
       delete shownFields[path];
       set(path, "");
       if(onGone) onGone();
@@ -2110,13 +2112,13 @@
     if(on.org || on.date){
       var r1 = el("div","row");
       r1.appendChild(on.org ? field("l r-org", P.org, T("单位 / 学校"), "right") : el("div","l"));
-      if(on.date) r1.appendChild(field("r", P.date, T("起止时间"), "left"));
+      if(on.date) r1.appendChild(field("r", P.date, T("起止时间"), "out"));
       e.appendChild(r1);
     }
     if(on.sub || on.place){
       var r2 = el("div","row r-sub");
       r2.appendChild(on.sub ? field("l", P.sub, T("岗位 / 专业"), "right") : el("div","l"));
-      if(on.place) r2.appendChild(field("r", P.place, T("城市"), "left"));
+      if(on.place) r2.appendChild(field("r", P.place, T("城市"), "out"));
       e.appendChild(r2);
     }
 
