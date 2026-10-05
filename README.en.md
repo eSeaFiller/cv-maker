@@ -41,7 +41,8 @@ Or skip the fiddling and press *Fill one page*: a binary search finds the looses
 | Fill N pages | Too much tightens, too little opens up, landing exactly on one page or two |
 | Smart page breaks | An entry a page edge would cut is moved down whole, and pages keep a normal head and foot margin. The gap is drawn while you edit, so the gap on screen is the gap that prints |
 | Drag to reorder | Hover to the left of a section or entry and hold the six-dot handle |
-| Styling | Three heading treatments × CJK and Latin faces × four accent colours |
+| Two templates | Besides "Classic", a "Cards" template: a header with a tagline and a row of big numbers, a clickable contents row, a sidebar for education / skills / projects / a coverage matrix / QR codes, and a main column where each job is a case card with one big KPI and its 【lead-ins】 drawn as tags. Sidebar width, sidebar text size, column gap, stat and KPI sizes all have sliders; ⇆ on a section title moves it to the other column |
+| Styling | Four heading treatments × CJK and Latin faces × five accent colours; photo ratio 5:6 / 3:4 / 2:3 |
 | Bilingual | English section names and dates like `Sep 2022 - Present` are recognised; an imported English résumé switches to Latin typography |
 | Versions | Archive and name one per employer, switch back any time; a blue dot marks edits not yet written back |
 | Backup & print | Draft and every version export into a single `.json`; A4 PDF in one click |

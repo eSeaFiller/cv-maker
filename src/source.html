@@ -507,6 +507,158 @@
     opacity:.45;transition:opacity .12s}
   .add-secs:hover,.add-secs:focus-within{opacity:1}
 
+
+  /* ================= 卡片版式（layout = card） =================
+     抬头（姓名 + 定位语 + 简介 + 照片）→ 联系方式一行 → 数字条 → 案例目录 → 左侧栏 / 右主栏。
+     每块都由面板上的滑杆或开关驱动；空的块在预览和打印里一律不留痕。 */
+  .paper{--line-p:#e3e6ec;--muted-ink:#7a8291}
+  .photo{aspect-ratio:var(--photo-ratio, 5/6)}
+  .paper[data-layout="card"] .chd{display:flex;align-items:flex-start;gap:22px}
+  .paper[data-layout="card"][data-photoside="left"] .chd{flex-direction:row-reverse}
+  .chd-main{position:relative;flex:1;min-width:0;padding-top:var(--hd-top)}
+  .nm-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
+  .paper[data-layout="card"] .nm{text-align:left;letter-spacing:-.01em;line-height:1.08}
+  .paper[data-layout="card"][data-lang="zh"] .nm{letter-spacing:.04em}
+  .nm-alt{font-size:calc(var(--fs) * 1.08);font-weight:500;color:var(--muted-ink)}
+  .nm-alt:empty{display:none}
+  body.editing .nm-alt.show:empty{display:inline}
+  .tg{margin-top:calc(var(--gap-header) * .3 + 5px);font-size:calc(var(--fs) * var(--tg-scale, 1.12));
+      font-weight:650;line-height:1.3;color:var(--ink)}
+  .tg b,.tg strong{color:var(--rail)}
+  .tg:empty{display:none}
+  body.editing .tg.show:empty{display:block}
+  .paper[data-layout="card"] .sum{border-left:0;padding-left:0;margin-left:0 !important;text-align:left;
+      margin-top:calc(var(--gap-header) * .25 + 4px);font-size:calc(var(--fs) * .98);line-height:1.5}
+  .paper[data-layout="card"] .cts{justify-content:flex-start;margin-top:calc(var(--gap-header) * .45 + 4px)}
+  .paper[data-layout="card"] .hd-adds{top:0;right:0}
+
+  .stats{display:grid;grid-template-columns:repeat(var(--stat-n, 4), minmax(0,1fr));
+         margin-top:calc(var(--gap-stats, 12px) * .8 + 2px);
+         border-top:1.5px solid var(--ink);border-bottom:1px solid var(--line-p)}
+  .stat{position:relative;min-width:0;padding:calc(var(--gap-stats, 12px) * .45 + 4px) 10px calc(var(--gap-stats, 12px) * .4 + 4px) 0;
+        border-right:1px solid var(--line-p)}
+  .stat + .stat{padding-left:12px}
+  .stat:last-child{border-right:0}
+  .stat-n{display:flex;align-items:baseline;gap:1px;color:var(--rail);font-weight:700;letter-spacing:-.02em;
+          font-size:calc(var(--fs) * var(--stat-scale, 1.75));line-height:1.05;font-variant-numeric:tabular-nums}
+  .stat-u{font-size:.52em;font-weight:650;letter-spacing:0}
+  .stat-u:empty{display:none}
+  body.editing .stat-u:empty{display:inline;min-width:.6em}
+  .stat-l{margin-top:4px;font-size:calc(var(--fs) * .82);line-height:1.38;color:var(--ink-2)}
+  .stats{position:relative}
+  .stat > .tools{flex-direction:row;right:auto;left:0;top:auto;bottom:100%;padding:0 0 4px}
+  body.editing .stat:hover > .tools{opacity:1;pointer-events:auto}
+  .paper[data-layout="card"] .hd{display:block;margin-bottom:0}
+  .stats-add{position:absolute;right:0;top:100%;margin-top:3px;z-index:3}
+
+  .toc{display:flex;flex-wrap:wrap;align-items:center;gap:6px 7px;margin-top:calc(var(--gap-stats, 12px) * .6 + 3px);
+       font-size:calc(var(--fs) * .84);line-height:1.5}
+  .toc-l{font-weight:650;color:var(--ink-2);letter-spacing:.05em;margin-right:3px}
+  .toc-l:empty{display:none}
+  body.editing .toc-l:empty{display:inline}
+  .toc a{display:inline-flex;align-items:baseline;gap:5px;border:1px solid var(--line-p);border-radius:99px;
+         padding:1px 10px 1px 8px;color:var(--ink-2);text-decoration:none}
+  .toc a b{color:var(--rail);font-weight:700;font-size:.92em}
+
+  .cgrid{display:grid;grid-template-columns:var(--side-w, 168px) minmax(0,1fr);gap:var(--col-gap, 22px);
+         margin-top:calc(var(--gap-stats, 12px) + 4px);align-items:start}
+  .paper[data-sidepos="right"] .cgrid{grid-template-columns:minmax(0,1fr) var(--side-w, 168px)}
+  .paper[data-sidepos="right"] .cside{order:2}
+  .cside,.cmain{min-width:0;position:relative}
+  .cside{font-size:calc(var(--fs) * var(--side-scale, .92));line-height:calc(var(--lh) * .92)}
+  .cgrid .sec{margin-bottom:var(--gap-section)}
+  .cgrid .sec:last-child{margin-bottom:0}
+  .cside .sec-head .add-entry{right:0}
+
+  /* 侧栏里的经历：单位 / 岗位专业 / 时间·城市 / 备注 依次往下排 */
+  .s-l1 .fld-in{font-weight:700;color:var(--ink);font-size:1.04em;line-height:1.3}
+  .s-l2,.s-l3{color:var(--ink-2);line-height:1.42}
+  .s-l3{display:flex;flex-wrap:wrap;gap:0 6px;color:var(--muted-ink);font-size:.94em}
+  .s-l3 > .fld,.c-l2 > .fld{display:flex;align-items:baseline}
+  .s-l3 > .fld + .fld::before{content:"·";margin-right:6px}
+  .s-l1row{display:flex;flex-wrap:wrap;align-items:baseline;gap:1px 6px}
+  .s-l1row .note{margin-top:0;font-size:.8em;font-weight:600;color:var(--rail);line-height:1.5;
+                 padding:0 5px;border-radius:2px;background:color-mix(in srgb, var(--rail) 9%, white)}
+  .cside .note{color:var(--rail);font-weight:600;margin-top:1px}
+  .cside .entry{margin-bottom:calc(var(--gap-entry) * .75)}
+  .cside .bl li{text-align:left}
+
+  /* 侧栏里的标签行：左边一个小字标签，右边内容；标签底色选了「跟随主题色」时不画色块 */
+  .cside .chip-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 9px;margin-bottom:calc(var(--gap-bullet) + 2px)}
+  .paper[data-layout="card"][data-chip="auto"] .chip{background:none;color:var(--muted-ink);border:0;padding:0;
+        min-width:0;text-align:left;font-weight:500;font-size:.94em}
+  .cside .chip-txt{line-height:1.45}
+
+  /* 主栏里的经历做成案例卡：左竖线 + 序号 + 右上角 KPI */
+  .cmain{counter-reset:case}
+  .cmain .entry.case{counter-increment:case}
+  .paper[data-crail="1"] .cmain .entry.case{padding:4px 0 6px 13px;border-left:2px solid var(--rail)}
+  .paper[data-cnums="1"] .cmain .entry.case::before{
+    content:counter(case, decimal-leading-zero);position:absolute;left:0;top:5px;transform:translateX(-100%);
+    padding-right:6px;font-size:calc(var(--fs) * .74);font-weight:700;color:var(--rail)}
+  .paper[data-cnums="1"][data-crail="1"] .cmain .entry.case::before{left:-2px}
+  .mx-row.entry{margin-bottom:0}
+  .case-h{display:flex;align-items:flex-start;gap:14px}
+  .case-i{flex:1;min-width:0}
+  .c-l1{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 9px}
+  .c-l1 .r-org .fld-in{font-size:calc(var(--fs) * 1.16);font-weight:700;color:var(--ink);line-height:1.3}
+  .c-l1 .c-sub .fld-in{color:var(--ink-2);font-weight:500}
+  .c-l2{display:flex;flex-wrap:wrap;gap:0 6px;margin-top:1px;color:var(--muted-ink);font-size:calc(var(--fs) * .9)}
+  .c-l2 > .fld + .fld::before{content:"·";margin-right:6px}
+  .kpi{position:relative;flex:none;text-align:right;padding-left:12px;border-left:1px solid var(--line-p);min-width:90px}
+  .kpi-n{display:flex;justify-content:flex-end;align-items:baseline;gap:1px;color:var(--rail);font-weight:700;
+         font-size:calc(var(--fs) * var(--kpi-scale, 1.3));line-height:1.05;letter-spacing:-.02em;white-space:nowrap}
+  .kpi-u{font-size:.58em;font-weight:650}
+  .kpi-u:empty{display:none}
+  body.editing .kpi-u:empty{display:inline;min-width:.5em}
+  .kpi-l{margin-top:3px;font-size:calc(var(--fs) * .78);color:var(--muted-ink);white-space:nowrap}
+  .kpi-del{position:absolute;right:100%;top:0;margin-right:4px;opacity:0;pointer-events:none}
+  body.editing .kpi:hover > .kpi-del,body.editing .kpi-del:focus-visible{opacity:1;pointer-events:auto}
+
+  /* 要点开头的【小标题】/「小标题」/「小标题：」在卡片版式里画成小色块；数据里的原文一个字不动 */
+  .bl-in.tagged > :first-child{display:inline-block;font-weight:650;color:var(--rail);
+    background:color-mix(in srgb, var(--rail) 9%, white);border-radius:2px;padding:0 5px;margin-right:6px;
+    font-size:.9em;line-height:1.55;vertical-align:1px;white-space:nowrap}
+  .cmain .bl li:has(> .bl-in.tagged){padding-left:0}
+  .cmain .bl li:has(> .bl-in.tagged)::before{content:none}
+  .paper[data-layout="card"] .bl li{text-align:left}
+  .paper[data-layout="card"][data-lang="zh"] .bl li{text-align:justify}
+
+  /* 矩阵板块：一行一个职能，右边用彩色圆点标「在哪儿做过」，底下一行图例 */
+  .mx-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:1px 0;
+          border-bottom:1px solid var(--line-p)}
+  .mx-row:last-of-type{border-bottom:0}
+  .mx-l{flex:1;min-width:0;font-weight:500;color:var(--ink)}
+  .mx-dots{display:inline-flex;gap:3px;flex:none}
+  .mx-dot{width:7px;height:7px;border-radius:50%;padding:0;border:0;background:var(--dc);display:block}
+  .mx-dot.off{display:none}
+  body.editing .mx-dot{cursor:pointer}
+  body.editing .mx-dot.off{display:block;background:none;box-shadow:inset 0 0 0 1px var(--dc);opacity:.6}
+  .mx-key{display:flex;flex-wrap:wrap;gap:3px 10px;margin-top:6px;font-size:.88em;color:var(--muted-ink)}
+  .mx-k{position:relative;display:inline-flex;align-items:center;gap:4px}
+  .mx-k i{width:7px;height:7px;border-radius:50%;background:var(--dc);display:block;flex:none}
+  .mx-k .tool{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:2px;opacity:0;pointer-events:none;width:17px;height:17px}
+  body.editing .mx-k:hover > .tool{opacity:1;pointer-events:auto}
+  .mx-add{display:none}
+  body.editing .mx-add{display:inline-block}
+
+  /* 二维码：自动由 LinkedIn / 网址类联系方式生成 */
+  .qrs{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:8px;margin-top:var(--gap-section);
+       padding-top:calc(var(--gap-section) * .5 + 4px);border-top:1px solid var(--line-p)}
+  .qr{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;color:inherit;text-decoration:none}
+  .qr svg{width:var(--qr-size, 42px);height:var(--qr-size, 42px);display:block;flex:none}
+  .qr span{min-width:0;font-size:.82em;line-height:1.3;color:var(--muted-ink);white-space:nowrap}
+  .qr span b{display:block;color:var(--ink);font-weight:650}
+  .paper[data-layout="card"] .fld-in,.paper[data-layout="card"] .chip-txt,.paper[data-layout="card"] .bl-in,
+  .paper[data-layout="card"] .sum,.paper[data-layout="card"] .stat-l,.paper[data-layout="card"] .tg{text-wrap:pretty}
+
+  /* 板块标题的第四种：小号大写 + 后面一道细线（卡片版式默认用它） */
+  .paper[data-hstyle="tail"] .sec-head{background:none;padding:var(--band-pad) 0;gap:9px}
+  .paper[data-hstyle="tail"] .sec-head::before{display:none}
+  .paper[data-hstyle="tail"] .sec-head::after{content:"";flex:1;align-self:center;border-top:1px solid var(--line-p)}
+  .paper[data-hstyle="tail"] .sec-t{font-size:calc(var(--fs) * .86);letter-spacing:.14em;text-transform:uppercase}
+  .paper[data-hstyle="tail"][data-lang="zh"] .sec-t{letter-spacing:.1em}
+
   /* ---------- pagination ---------- */
   /* A spacer parks the content that would otherwise straddle a page edge down
      onto the next page. It is laid out, so the editor shows the same gap the
@@ -574,6 +726,11 @@
     /* the spacer itself must print — it is the page break — but its hatching is
        an editing aid only */
     .pgspace{background:none !important}
+    .tg:empty,.nm-alt:empty,.toc-l:empty,.stat-u:empty,.kpi-u:empty,.mx-dot.off,.mx-add,.stats-add{display:none !important}
+    .stat:not(:has(.ed:not(:empty))){visibility:hidden}
+    .stats:not(:has(.ed:not(:empty))){display:none !important}
+    .kpi:not(:has(.ed:not(:empty))){display:none !important}
+    .toc a[href]{color:inherit}
   }
   @page{size:A4;margin:0}
   @media (prefers-reduced-motion:reduce){*{transition:none !important}}
@@ -621,6 +778,28 @@
       <p class="hint" id="v-msg" data-i18n="h.versions">给每家公司存一版：点「存为新版本」，起个名，之后点版本名即可切回。切走前记得先「更新此版本」，否则改动只留在当前草稿里。</p>
     </div>
 
+    <div class="grp" id="g-layout">
+      <p class="grp-t" data-i18n="g.layout">版式模板</p>
+      <div class="seg" id="layoutsel">
+        <button data-lay="classic" aria-pressed="true" data-i18n="b.classic">经典单栏</button>
+        <button data-lay="card" aria-pressed="false" data-i18n="b.card">卡片双栏</button>
+      </div>
+      <div id="card-opts" hidden>
+        <div id="g-card" style="margin-top:14px"></div>
+        <p class="sub-t" style="margin-top:12px" data-i18n="s.sidepos">侧栏位置</p>
+        <div class="seg" id="sidepos">
+          <button data-sp="left" aria-pressed="true" data-i18n="b.sleft">左侧</button>
+          <button data-sp="right" aria-pressed="false" data-i18n="b.sright">右侧</button>
+        </div>
+        <label class="chk" style="margin-top:12px"><input type="checkbox" id="c-toc"> <span data-i18n="k.ctoc">显示案例目录（PDF 里可点击跳转）</span></label>
+        <label class="chk" style="margin-top:9px"><input type="checkbox" id="c-nums"> <span data-i18n="k.cnums">案例序号 01 / 02 / 03</span></label>
+        <label class="chk" style="margin-top:9px"><input type="checkbox" id="c-rail"> <span data-i18n="k.crail">案例左侧竖线</span></label>
+        <label class="chk" style="margin-top:9px"><input type="checkbox" id="c-tags"> <span data-i18n="k.ctags">要点开头的【小标题】画成色块</span></label>
+        <label class="chk" style="margin-top:9px"><input type="checkbox" id="c-qr"> <span data-i18n="k.cqr">侧栏底部放二维码（取自 LinkedIn / 网址）</span></label>
+        <p class="hint" data-i18n="h.card">板块标题旁的 <b>⇆</b> 把整个板块挪到另一栏。抬头右上角可以加<b>定位语</b>、<b>副名</b>和<b>数字条</b>；主栏每段经历可以加一个 <b>KPI</b> 大数字。都留空就不会印出来。卡片版式按一页设计，内容多了先用「排满一页」收紧。</p>
+      </div>
+    </div>
+
     <div class="grp" id="g-space">
       <p class="grp-t" data-i18n="g.space">间距</p>
     </div>
@@ -636,6 +815,7 @@
         <button data-h="band" aria-pressed="true" data-i18n="b.band">灰底条</button>
         <button data-h="rule" aria-pressed="false" data-i18n="b.rule">细线</button>
         <button data-h="plain" aria-pressed="false" data-i18n="b.plain">纯文字</button>
+        <button data-h="tail" aria-pressed="false" data-i18n="b.tail">细线尾</button>
       </div>
       <p class="sub-t" data-i18n="s.lang">正文语言</p>
       <div class="seg" id="langsel">
@@ -662,6 +842,7 @@
         <button data-a="navy"  style="--sw:#1c3f6e" aria-pressed="false" title="藏青" aria-label="藏青" data-i18n-attr="title:c.navy,aria-label:c.navy"></button>
         <button data-a="green" style="--sw:#1f4d3a" aria-pressed="false" title="松绿" aria-label="松绿" data-i18n-attr="title:c.green,aria-label:c.green"></button>
         <button data-a="wine"  style="--sw:#6d2230" aria-pressed="false" title="酒红" aria-label="酒红" data-i18n-attr="title:c.wine,aria-label:c.wine"></button>
+        <button data-a="blue"  style="--sw:#1f3fd6" aria-pressed="false" title="宝蓝" aria-label="宝蓝" data-i18n-attr="title:c.blue,aria-label:c.blue"></button>
       </div>
       <p class="sub-t" data-i18n="s.chip" style="margin-top:12px">标签底色</p>
       <div class="swatches" id="chipsel">
@@ -670,6 +851,7 @@
         <button data-c="navy"  style="--sw:#1c3f6e" aria-pressed="false" title="藏青" aria-label="藏青" data-i18n-attr="title:c.navy,aria-label:c.navy"></button>
         <button data-c="green" style="--sw:#1f4d3a" aria-pressed="false" title="松绿" aria-label="松绿" data-i18n-attr="title:c.green,aria-label:c.green"></button>
         <button data-c="wine"  style="--sw:#6d2230" aria-pressed="false" title="酒红" aria-label="酒红" data-i18n-attr="title:c.wine,aria-label:c.wine"></button>
+        <button data-c="blue"  style="--sw:#1f3fd6" aria-pressed="false" title="宝蓝" aria-label="宝蓝" data-i18n-attr="title:c.blue,aria-label:c.blue"></button>
         <button data-c="grey"  style="--sw:#e6e9ed" aria-pressed="false" title="浅灰" aria-label="浅灰" data-i18n-attr="title:c.grey,aria-label:c.grey"></button>
         <button data-c="white" style="--sw:#ffffff" aria-pressed="false" title="白色" aria-label="白色" data-i18n-attr="title:c.white,aria-label:c.white"></button>
       </div>
@@ -684,6 +866,12 @@
       <div class="seg" id="photo-side" style="margin-bottom:9px">
         <button data-side="left" aria-pressed="false" data-i18n="b.pleft">照片在左</button>
         <button data-side="right" aria-pressed="true" data-i18n="b.pright">照片在右</button>
+      </div>
+      <p class="sub-t" data-i18n="s.pratio">照片比例</p>
+      <div class="seg" id="pratio" style="margin-bottom:9px">
+        <button data-r="5/6" aria-pressed="true">5:6</button>
+        <button data-r="3/4" aria-pressed="false">3:4</button>
+        <button data-r="2/3" aria-pressed="false" data-i18n="b.r23">2:3 半身</button>
       </div>
       <div class="btns">
         <button class="btn" id="photo-swap" data-i18n="b.pswap">上传/更换照片</button>
@@ -954,14 +1142,20 @@
   };
 
   var PRESETS = {
-    tight: {gapSection:11, gapEntry:7,  gapBullet:2, gapHeader:10, bandPad:4, gapContact:14, hdTop:2,  ctScale:.92,  nmScale:1.62, fs:11.6, lh:1.50, padX:34, padY:24, photo:78},
-    normal:{gapSection:18, gapEntry:11, gapBullet:5, gapHeader:18, bandPad:6, gapContact:22, hdTop:6,  ctScale:.95,  nmScale:1.75, fs:12.2, lh:1.62, padX:42, padY:32, photo:88},
-    airy:  {gapSection:28, gapEntry:18, gapBullet:9, gapHeader:32, bandPad:9, gapContact:30, hdTop:16, ctScale:1.0,  nmScale:1.92, fs:12.8, lh:1.78, padX:52, padY:46, photo:100}
+    tight: {gapSection:11, gapEntry:7,  gapBullet:2, gapHeader:10, bandPad:4, gapContact:14, hdTop:2,  ctScale:.92,  nmScale:1.62, fs:11.6, lh:1.50, padX:34, padY:24, photo:78,
+             sideW:160, sideScale:.88, colGap:22, statScale:1.6, kpiScale:1.2, tgScale:1.06, gapStats:8},
+    normal:{gapSection:18, gapEntry:11, gapBullet:5, gapHeader:18, bandPad:6, gapContact:22, hdTop:6,  ctScale:.95,  nmScale:1.75, fs:12.2, lh:1.62, padX:42, padY:32, photo:88,
+             sideW:168, sideScale:.92, colGap:26, statScale:1.75, kpiScale:1.3, tgScale:1.12, gapStats:12},
+    airy:  {gapSection:28, gapEntry:18, gapBullet:9, gapHeader:32, bandPad:9, gapContact:30, hdTop:16, ctScale:1.0,  nmScale:1.92, fs:12.8, lh:1.78, padX:52, padY:46, photo:100,
+             sideW:176, sideScale:.95, colGap:32, statScale:1.9, kpiScale:1.4, tgScale:1.2, gapStats:18}
   };
 
   var DEF_OPTS = {oneLine:true, photoOn:true, photoSide:"right",
                   hstyle:"band", font:"sans", accent:"ink", latin:"auto",
                   centerPage:true, lang:"zh", telemetry:true, smartBreak:true, chip:"auto",
+                  // 卡片版式的开关；经典版式完全不读它们
+                  layout:"classic", sidePos:"left", photoRatio:"5/6",
+                  cardToc:true, cardNums:true, cardRail:true, cardTags:true, cardQR:true,
                   // 第一次打开时跟随浏览器语言；之后以用户自己的选择为准
                   ui: /^zh\b/i.test(navigator.language || "") ? "zh" : "en"};
 
@@ -985,7 +1179,7 @@
     times:'"Times New Roman",Times',
     palatino:'"Palatino Linotype",Palatino,"Book Antiqua",Georgia'
   };
-  var ACCENTS = {ink:"#16181b", navy:"#1c3f6e", green:"#1f4d3a", wine:"#6d2230"};
+  var ACCENTS = {ink:"#16181b", navy:"#1c3f6e", green:"#1f4d3a", wine:"#6d2230", blue:"#1f3fd6"};
   // 标签底色可以脱离主题色单独选。浅色和白色配深字加一道边框，
   // 边框是 border 不是背景 —— 读者关掉「背景图形」也还看得见。
   var CHIPS = {
@@ -994,11 +1188,12 @@
     navy:  {bg:"#1c3f6e", fg:"#ffffff"},
     green: {bg:"#1f4d3a", fg:"#ffffff"},
     wine:  {bg:"#6d2230", fg:"#ffffff"},
+    blue:  {bg:"#1f3fd6", fg:"#ffffff"},
     grey:  {bg:"#e6e9ed", fg:"#22262d", bd:"#d3d9e0"},
     white: {bg:"#ffffff", fg:"#16181b", bd:"#c2cad3"}
   };
   // the title bar is a pale wash of the same hue, so the whole strip reads as one choice
-  var BANDS   = {ink:"#edeff1", navy:"#e9eef5", green:"#e8f0ea", wine:"#f4eaec"};
+  var BANDS   = {ink:"#edeff1", navy:"#e9eef5", green:"#e8f0ea", wine:"#f4eaec", blue:"#eaeefc"};
 
   var CTRL = {
     "g-space":[
@@ -1020,10 +1215,20 @@
       {k:"nmScale", v:"--nm-scale", label:"姓名字号",     min:1.05, max:2.8, step:.01, u:""},
       {k:"hdTop",   v:"--hd-top",   label:"姓名区下移",   min:0,   max:110, step:1,   u:"px"},
       {k:"ctScale", v:"--ct-scale", label:"联系方式字号", min:.65, max:1.5, step:.01, u:""}
+    ],
+    // 只在卡片版式里起作用
+    "g-card":[
+      {k:"sideW",     v:"--side-w",     label:"侧栏宽度",     min:120, max:300, step:1,   u:"px"},
+      {k:"sideScale", v:"--side-scale", label:"侧栏字号",     min:.75, max:1.1, step:.01, u:""},
+      {k:"colGap",    v:"--col-gap",    label:"两栏间距",     min:8,   max:60,  step:1,   u:"px"},
+      {k:"gapStats",  v:"--gap-stats",  label:"数字条上下留白", min:0, max:40,  step:1,   u:"px"},
+      {k:"tgScale",   v:"--tg-scale",   label:"定位语字号",   min:.85, max:1.8, step:.01, u:""},
+      {k:"statScale", v:"--stat-scale", label:"数字条字号",   min:1.1, max:3,   step:.01, u:""},
+      {k:"kpiScale",  v:"--kpi-scale",  label:"KPI 字号",     min:.9,  max:2.4, step:.01, u:""}
     ]
   };
   function allCtrl(){
-    return CTRL["g-space"].concat(CTRL["g-type"], CTRL["g-head"]);
+    return CTRL["g-space"].concat(CTRL["g-type"], CTRL["g-head"], CTRL["g-card"]);
   }
 
   var ICONS = {
@@ -1061,6 +1266,21 @@
       "Write one achievement: what you did and what came of it, with numbers where you can",
     "标签":"Label", "内容":"Content", "标签：":"Label:",
     "＋ 新板块":"+ Section", "＋ 标签板块":"+ Label section", "＋ 新条目":"+ Entry", "＋ 新的一行":"+ Row",
+    "侧栏宽度":"Sidebar width", "侧栏字号":"Sidebar text size", "两栏间距":"Column gap", "数字条上下留白":"Stats bar spacing",
+    "定位语字号":"Tagline size", "数字条字号":"Stat size", "KPI 字号":"KPI size",
+    "载入前备份 {0}":"Before load {0}",
+    "已从 {0} 载入草稿，版本列表没动；原来的草稿存成了「{1}」。":"Loaded the draft from {0}; your versions are untouched, and the previous draft is saved as “{1}”.",
+    "＋ 矩阵板块":"+ Matrix section", "职能覆盖":"Coverage", "公司 A":"Company A", "公司 B":"Company B",
+    "活动 / 展会":"Events", "内容 / 社媒":"Content / social", "一行一个职能，右边用彩色圆点标出在哪段经历里做过":"One row per skill, with coloured dots marking where you did it",
+    "＋ 副名":"+ Alt name", "＋ 定位语":"+ Tagline", "＋ 数字条":"+ Stats bar", "＋ 数字":"+ Stat", "＋ KPI":"+ KPI",
+    "＋ 图例":"+ Legend", "副名，比如另一种语言的名字":"Name in another language", "一句话定位：你是谁、凭什么":"One-line positioning: who you are, and why",
+    "两三行简介：学历、几段经历、覆盖哪些方向":"Two or three lines: degree, internships, what you cover",
+    "姓名下面一排大数字，3 秒内让人看到结果":"A row of big numbers under the name — results in three seconds",
+    "左移":"Move left", "右移":"Move right", "删除这个数字":"Delete this stat", "这个数字说明什么":"What this number means",
+    "目录标题":"Contents label", "短名":"Short name", "本页案例":"On this page", "扫码访问":"Scan to open",
+    "KPI 说明":"KPI label", "删除 KPI":"Delete KPI", "挪到另一栏":"Move to the other column",
+    "职能":"Skill", "新职能":"New skill", "来源":"Source", "新来源":"New source", "删除这个图例":"Delete this legend item",
+    "点一下标上 / 取消":"Click to mark / unmark",
     "一条条经历：单位、时间、岗位、要点":"Entry by entry: organisation, dates, role, bullets",
     "左边一个纯色标签框，右边跟一行内容 —— 语言、工具、证书这类":
       "A solid label box on the left, one line of content on the right - for languages, tools, certificates",
@@ -1199,12 +1419,19 @@
     "g.space":"SPACING", "g.type":"TYPE",
 
     "g.style":"STYLE", "s.head":"Section heading",
-    "b.band":"Grey band", "b.rule":"Rule", "b.plain":"Plain",
+    "b.band":"Grey band", "b.rule":"Rule", "b.plain":"Plain", "b.tail":"Tail rule",
+    "g.layout":"TEMPLATE", "b.classic":"Classic", "b.card":"Cards",
+    "s.sidepos":"Sidebar side", "b.sleft":"Left", "b.sright":"Right",
+    "k.ctoc":"Contents row (clickable in the PDF)", "k.cnums":"Case numbers 01 / 02 / 03",
+    "k.crail":"Rule down the left of each case", "k.ctags":"Turn 【lead-ins】 into tags",
+    "k.cqr":"QR codes at the foot of the sidebar (from LinkedIn / web contacts)",
+    "h.card":"The <b>⇆</b> beside a section title moves it to the other column. The header’s top-right buttons add a <b>tagline</b>, an <b>alt name</b> and a <b>stats bar</b>; each main-column entry can take one <b>KPI</b>. Anything left empty never prints. Cards are designed for one page — use “Fit to one page” if it runs over.",
+    "s.pratio":"Photo ratio", "b.r23":"2:3 half",
     "s.lang":"Resume language", "b.cn":"Chinese",
     "s.font":"CJK typeface", "b.sans":"Sans", "b.serif":"Serif",
     "s.latin":"Latin & figures", "o.auto":"Follow the CJK face",
     "s.accent":"Accent colour",
-    "c.ink":"Ink black", "c.navy":"Navy", "c.green":"Pine green", "c.wine":"Wine red",
+    "c.ink":"Ink black", "c.navy":"Navy", "c.green":"Pine green", "c.wine":"Wine red", "c.blue":"Royal blue",
     "s.chip":"Label colour", "c.auto":"Follow the accent", "c.grey":"Light grey", "c.white":"White",
 
     "g.header":"HEADER",
@@ -1444,21 +1671,60 @@
 
   /* ---------- import & parse ---------- */
   var RE = {
-    date: /((?:19|20)\d{2}\s*[年./\-]\s*(?:\d{1,2}\s*月?)?)\s*[-–—~～至]+\s*(至今|今|现在|present|now|(?:19|20)\d{2}\s*[年./\-]\s*(?:\d{1,2}\s*月?)?)/i,
+    // 年份后的月份可省：「2021—2024」「2024—至今」和「2023.9-2024.6」都算
+    date: /((?:19|20)\d{2}(?:\s*[年./\-]\s*\d{1,2}\s*月?|\s*年)?)\s*[-–—~～至]+\s*(至今|今|现在|present|now|(?:19|20)\d{2}(?:\s*[年./\-]\s*\d{1,2}\s*月?|\s*年)?)/i,
     email: /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/,
     phone: /(?:\+?\d{1,3}[\s-]?)?1[3-9]\d{9}|\+?\d[\d\s()-]{8,}\d/,
-    url: /(?:https?:\/\/|www\.)[^\s，,；;、]+/i,
+    // 网址到中文字符为止：「linkedin.com/in/xx目前仍是在校生」不能整句吞进链接
+    url: /(?:https?:\/\/|www\.|\b(?:linkedin|github)\.com\/)[^\s，,；;、。|｜㐀-鿿]+/i,
     bullet: /^[•·・∙‧●○◆◇■□▪▫*\-–—>»]+\s*/,
     tag: /^[【「『\[〔]/,
-    label: /^([^：:]{1,24})([：:])\s*(.+)$/
+    label: /^([^：:]{1,30})([：:])\s*(.+)$/
   };
-  var MON = "\\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)[a-z]*\\.?";
-  var EN_PT = "(?:" + MON + "\\s+(?:19|20)\\d{2}|\\b\\d{1,2}[/.](?:19|20)\\d{2}|\\b(?:19|20)\\d{2}\\b)";
-  RE.dateEn = new RegExp(EN_PT + "\\s*[-–—~]+\\s*(?:Present|Current|Now|Today|" + EN_PT + ")", "i");
-  function matchDate(s){ return s.match(RE.date) || s.match(RE.dateEn); }
+  // 月份写全称或缩写都认（英 / 法），但必须是整词 —— 「Marketing 2024」不是「Mar 2024」
+  var MON = "\\b(?:January|February|March|April|May|June|July|August|September|October|November|December|" +
+            "Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec|" +
+            "janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre|" +
+            "janv|févr|fevr|avr|juil|déc)(?![A-Za-zÀ-ÿ])\\.?";
+  var YR = "(?:19|20)\\d{2}";
+  var EN_PT = "(?:" + MON + "\\s*" + YR + "|\\b\\d{1,2}[/.]" + YR + "|\\b" + YR + "\\b)";
+  var NOW = "(?:Present|Current|Now|Today|Ongoing|aujourd['’]hui|présent|actuel(?:lement)?|en cours|à ce jour)";
+  RE.dateEn = new RegExp(EN_PT + "\\s*[-–—~]+\\s*(?:" + NOW + "|" + EN_PT + ")", "i");
+  RE.dateMM = new RegExp(MON + "\\s*[-–—~]+\\s*" + MON + "\\s*" + YR, "i");          // Jun – Aug 2023
+  RE.dateSince = new RegExp("\\b(?:depuis|since)\\s+(?:" + MON + "\\s*)?" + YR, "i"); // Depuis 2024
+  // 几种写法都试一遍，取最靠前的（同位置取最长）：「Sept 2024 – Present」不能只认出「2024 – Present」
+  function matchDate(s){
+    var best = null;
+    [RE.date, RE.dateEn, RE.dateMM, RE.dateSince].forEach(function(re){
+      var m = s.match(re);
+      if(m && (!best || m.index < best.index || (m.index === best.index && m[0].length > best[0].length))) best = m;
+    });
+    return best;
+  }
 
-  var SEC_EN = /^(EDUCATION|ACADEMIC BACKGROUND|WORK EXPERIENCE|PROFESSIONAL EXPERIENCE|EXPERIENCE|INTERNSHIPS?|EMPLOYMENT|PROJECTS?|PROJECT EXPERIENCE|SKILLS|TECHNICAL SKILLS|CORE SKILLS|CERTIFICATIONS?|CERTIFICATES|AWARDS|AWARDS AND HONORS|HONOU?RS|LANGUAGES?|ACTIVITIES|LEADERSHIP|VOLUNTEER(?:ING)?|PUBLICATIONS?|SUMMARY|PROFILE|OBJECTIVE|INTERESTS|ADDITIONAL(?: INFORMATION)?|EXTRACURRICULAR(?: ACTIVITIES)?|RESEARCH|COURSEWORK|REFERENCES|CONTACT)$/;
-  var CHIP_EN = /SKILL|LANGUAGE|CERTIF|AWARD|HONO|INTEREST|ADDITIONAL|TOOL/;
+  // 英法文板块名按词判断，所以「LANGUES, COMPÉTENCES ET OUTILS」「Awards & Interests」这类组合也认
+  var SEC_KW = ("education educational academic background work professional experience experiences internship internships employment " +
+    "project projects skill skills technical core certification certifications certificate certificates award awards honor honors " +
+    "honour honours language languages activities activity leadership volunteer volunteering publication publications summary profile " +
+    "objective interest interests additional information extracurricular research coursework reference references contact other others " +
+    "tool tools qualification qualifications achievement achievements training competencies highlights personal details career history " +
+    "hobbies relevant selected key " +
+    "formation formations expérience expériences professionnelle professionnelles stage stages projet projets académique académiques " +
+    "compétence compétences langue langues outil outils informatique informatiques distinction distinctions prix centres centre intérêt " +
+    "intérêts loisirs profil engagement engagements associatif associatifs associative associatives vie universitaire référence références " +
+    "autre autres divers activités qualités parcours scolaire diplôme diplômes bénévolat recherche informations complémentaires " +
+    "personnelles atouts études cursus précédentes").split(" ");
+  var SEC_STOP = /^(and|et|of|de|des|du|la|le|les|d|l|en|&)$/;
+  function isSectionLatin(l){
+    if(l.length > 50 || /\d|[.。]$/.test(l) || /[:：]\s*\S/.test(l)) return false;
+    var words = l.toLowerCase().split(/[^a-zà-ÿœ]+/).filter(function(w){ return w && !SEC_STOP.test(w); });
+    if(!words.length || words.length > 5) return false;
+    var miss = words.filter(function(w){ return SEC_KW.indexOf(w) < 0; }).length;
+    return miss === 0 || (miss === 1 && words.length >= 3);
+  }
+  var CHIP_EN = /SKILL|LANGUAGE|LANGUE|CERTIF|AWARD|HONO|INTEREST|INTÉRÊT|ADDITIONAL|TOOL|OUTIL|COMPÉTENCE|COMPETENCE|DISTINCTION|LOISIR|QUALIT|REFEREN|RÉFÉREN|OTHER|AUTRE|DIVERS/;
+  // 这些板块其实是自述：内容并进抬头的「一句话概括」，不单独成块
+  var SUMMARY_SEC = /^(个人概况|个人简介|个人介绍|自我介绍|自我评价|个人评价|个人总结|个人优势|核心优势|岗位优势|summary|profile|professional summary|about me|objective|profil|à propos)$/i;
 
   var SEC_WORDS = ["教育经历","教育背景","教育","学历","学历背景",
     "实习经历","实习","工作经历","工作经验","工作","职业经历","职业经验","从业经历","任职经历",
@@ -1467,7 +1733,7 @@
     "专业技能","技能特长","技能","个人技能","技能证书","证书","资格证书","培训经历","兼职经历","创业经历",
     "奖项","荣誉","奖项荣誉","荣誉奖项","获奖情况","获奖经历","语言","语言能力","作品集","发表论文","论文","专利",
     "其他","附加信息","补充信息","自我评价","个人评价","个人简介","个人信息","求职意向","职业目标","兴趣爱好","爱好"];
-  var CHIP_WORDS = /技能|语言|证书|奖项|荣誉|其他|评价|爱好|兴趣|附加|补充|资格|专利/;
+  var CHIP_WORDS = /技能|语言|证书|奖项|荣誉|其他|评价|爱好|兴趣|特长|能力|工具|附加|补充|资格|专利/;
 
   function esc(s){
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -1491,17 +1757,20 @@
   }
   function isSection(l){
     if(matchDate(l) || RE.email.test(l) || RE.url.test(l)) return false;
-    // English headings: strip decoration, collapse spaces, compare uppercased
-    var en = l.replace(/[■◆●▍▎_|｜\[\]【】:：.]/g," ").replace(/\s+/g," ").trim().toUpperCase();
-    if(en.length <= 34 && SEC_EN.test(en)) return true;
+    // Latin headings: strip decoration, then every word has to be a heading word
+    var en = l.replace(/[■◆●▍▎_|｜\[\]【】:：]/g," ").replace(/\s+/g," ").trim();
+    if(/[A-Za-z]/.test(en) && !/[㐀-鿿]/.test(en) && isSectionLatin(en)) return true;
     var s = l.replace(/[\s:：|｜/【】\[\]■◆●▍▎_—-]/g,"");
     if(!s || s.length > 14 || /\d/.test(s)) return false;
     if(SEC_WORDS.indexOf(s) >= 0) return true;
     // 「XX经历」「XX与XX实践」这类构词，覆盖词表之外的自定义板块名
-    return /^[一-龥A-Za-z]{1,10}(经历|经验|背景|能力|技能|证书|奖项|荣誉|评价|简介|介绍|活动|项目|实践|服务|成果|作品|论文|专利|培训|竞赛|资格|认证|特长|信息|意向|目标)$/.test(s);
+    return /^[一-龥A-Za-z]{1,10}(经历|经验|背景|能力|技能|证书|奖项|奖励|荣誉|评价|简介|介绍|概况|活动|项目|实践|服务|成果|作品|论文|专利|培训|竞赛|资格|认证|特长|兴趣|爱好|优势|语言|工具|信息|意向|目标)$/.test(s);
   }
   function isChipSection(title){
     return CHIP_WORDS.test(title) || CHIP_EN.test(title.toUpperCase());
+  }
+  function sectionTitle(l){
+    return l.replace(/[【】\[\]■◆●▍▎:：]/g,"").replace(/\s+/g," ").trim();
   }
   function detectLang(text){
     var cjk = (String(text).match(/[㐀-鿿]/g) || []).length;
@@ -1516,12 +1785,50 @@
     if(m) return [m[1].trim(), m[2].trim()];
     // 宽空格分隔时最多认三个词，避免把正文当成地点切走
     m = s.match(/^(.*\S)\s{2,}(\S.{0,24})$/);
-    if(m && m[2].trim().split(/\s+/).length <= 3) return [m[1].trim(), m[2].trim()];
+    // 「某科技  |  海外事业部」是一个名字：分隔符两边都属于单位名
+    if(m && m[2].trim().split(/\s+/).length <= 3 && !/[|｜·&\-–—]$/.test(m[1])) return [m[1].trim(), m[2].trim()];
     return [s.trim(), ""];
   }
   function boldTag(s){
     var m = s.match(/^([【「『\[〔][^】」』\]〕]{1,12}[】」』\]〕])\s*/);
     return m ? "<strong>" + esc(m[1]) + "</strong>" + esc(s.slice(m[0].length)) : esc(s);
+  }
+
+  var CONTACT_LABEL = /^(?:tel|phone|mobile|cell|e-?mail|mail|邮箱|电子邮箱|电话|手机|微信|wechat|地址|address|adresse|téléphone|tél)\s*[.:：]\s*/i;
+  var CONTACT_LABEL_ONLY = /^(?:tel|phone|mobile|cell|e-?mail|mail|邮箱|电子邮箱|电话|手机|微信|wechat|地址|address|adresse|téléphone|tél|linkedin|github)\s*[.:：]?$/i;
+  var PLACEHOLDER = /^(?:照片|头像|[（(]?待补充[）)]?|photo)$|^[^A-Za-z0-9À-ÿ㐀-鿿]+$/i;
+  function cjkCount(s){ return (String(s).match(/[㐀-鿿]/g) || []).length; }
+  function cleanName(s){
+    s = s.replace(/\s*[-–—|｜]?\s*(?:个人简历|求职简历|简历|resume|résumé|curriculum vitae|cv)$/i, "").replace(/\s+/g, " ").trim();
+    return /^[㐀-鿿](?: [㐀-鿿])+$/.test(s) ? s.replace(/ /g, "") : s;   // 林 知 遥 -> 林知遥
+  }
+  function isName(s){
+    var n = cleanName(s);
+    if(!n || n.length > 30 || PLACEHOLDER.test(n) || isSection(n)) return false;
+    if(!/^[A-Za-zÀ-ÿ㐀-鿿][A-Za-zÀ-ÿ㐀-鿿·.'’()（）\s-]*$/.test(n)) return false;
+    var c = cjkCount(n);
+    return c ? c <= 5 : n.split(/\s+/).length <= 5;
+  }
+  // 一整句话：中文够长或带句号，英文词数够多；带「|」分隔的是一串短标签，不算
+  function isProse(l){
+    if(/[|｜]/.test(l)) return false;
+    var c = cjkCount(l);
+    if(c >= 18) return true;
+    if(!c && l.split(/\s+/).length >= 9) return true;
+    return l.length > 25 && /[。.!！]$/.test(l);
+  }
+  // 单独一行的地点：「Paris」「Beijing, China」「中国 · 北京」。
+  // strict：只认「城市, 国家」这种一眼就是地点的写法 —— 用在和职位抢位置的地方
+  function isPlace(l, strict){
+    if(/[:：;；。()（）]/.test(l) || /\d/.test(l)) return false;
+    if(/^[A-ZÀ-Ý][A-Za-zÀ-ÿ'’.\- ]{1,24},\s*[A-ZÀ-Ý][A-Za-zÀ-ÿ'’.\- ]{1,20}$/.test(l)) return true;
+    if(strict) return false;
+    var c = cjkCount(l);
+    if(c) return c <= 6 && l.replace(/[\s·,，]/g,"").length <= 8;
+    return l.length <= 20 && l.split(/\s+/).length <= 2 && /^[A-ZÀ-Ý]/.test(l);
+  }
+  function joinText(a, b){
+    return a && b ? a + (/[㐀-鿿]$/.test(a) && /^[㐀-鿿]/.test(b) ? "" : " ") + b : a || b;
   }
 
   function parseResume(text){
@@ -1535,18 +1842,26 @@
     var head = firstSec < 0 ? lines.slice(0, Math.min(5, lines.length)) : lines.slice(0, firstSec);
     var body = firstSec < 0 ? lines : lines.slice(firstSec);
 
-    // header: contacts first, then whatever short line is left is the name
-    head.forEach(function(l){
-      var chunks = l.split(/\s{2,}|\t+|[｜|·•]/).map(function(c){ return c.trim(); }).filter(Boolean);
+    // header: contacts first, then whatever short line is left is the name;
+    // a long prose line is the self-summary, not twenty little "addresses"
+    var summary = [];
+    function addSummary(t){ if(t) summary.push(t); }
+    head.forEach(function(raw){
+      var l = raw.replace(RE.bullet, "").trim();
+      var hasContact = RE.email.test(l) || RE.url.test(l) || RE.phone.test(l);
+      if(!hasContact && isProse(l)){ addSummary(l); return; }
+      // the whole line is a name — "Anna Li  Zhiyao" / "林 知 遥" must not be cut at the wide gap
+      if(!out.header.name && !hasContact && isName(l)){ out.header.name = cleanName(l); return; }
+      var chunks = l.split(/\s{2,}|\t+|[｜|•]|\s·\s|\s+(?=(?:tel|phone|mobile|e-?mail|电话|手机|邮箱|微信)\s*[.:：])/i).map(function(c){ return c.trim(); }).filter(Boolean);
       chunks.forEach(function(c){
         var m;
+        if(CONTACT_LABEL_ONLY.test(c) || PLACEHOLDER.test(c)) return;          // "Email:" 本身不是一条联系方式
         if((m = c.match(RE.email))) out.header.contacts.push({type:"mail", text:m[0]});
         else if((m = c.match(RE.url))) out.header.contacts.push({type:/linkedin/i.test(m[0]) ? "link" : "web", text:m[0]});
-        else if((m = c.match(RE.phone))) out.header.contacts.push({type:"cell", text:c.trim()});
-        else if(!out.header.name && /^[一-龥A-Za-z][一-龥A-Za-z·.\s]{0,18}$/.test(c) && c.length <= 20)
-          out.header.name = c;
-        else if(c.length <= 40)
-          out.header.contacts.push({type:"pin", text:c});   // 地址等：宁可多一条也不丢
+        else if((m = c.match(RE.phone))) out.header.contacts.push({type:"cell", text:c.replace(CONTACT_LABEL, "").trim()});
+        else if(!out.header.name && isName(c)) out.header.name = cleanName(c);
+        else if(c.length <= 40) out.header.contacts.push({type:"pin", text:c.replace(CONTACT_LABEL, "").trim()});   // 地址等：宁可多一条也不丢
+        else addSummary(c);
       });
     });
     if(!out.header.name) out.header.name = T("你的姓名");
@@ -1564,7 +1879,8 @@
     function addBullet(t){
       if(!sec) newSection(T("其他"));
       if(sec.kind === "chip"){
-        var lm = t.match(RE.label);
+        // 「语言：英语」或表格里的「软件工具 ⇥ Word、Excel」
+        var lm = t.match(RE.label) || t.match(/^([^\t：:]{1,12})\t+()(.+)$/);
         // keep the colon the source used — "Languages:" must not become "Languages："
         sec.entries.push(lm ? {label: esc(lm[1]) + lm[2] + (lm[2] === ":" ? " " : ""), text: esc(lm[3])}
                             : {label:"", text: esc(t)});
@@ -1574,27 +1890,73 @@
       en.bullets.push(boldTag(t));
     }
 
-    body.forEach(function(raw){
+    // 「日期 & 日期」两段任期写在一起时，第二段也归日期
+    function fullDate(s, dm){
+      var d = dm[0], after = s.slice(s.indexOf(d) + d.length), m2;
+      var mm = after.match(/^\s*[&,，、;；]\s*/);
+      if(mm && (m2 = matchDate(after.slice(mm[0].length))) && m2.index === 0) d += mm[0] + m2[0];
+      return d;   // 原文原样：后面要拿它从行里抠掉
+    }
+    function isDateLine(l){
+      return l && !isSection(l) && !(RE.bullet.test(l) || RE.tag.test(l)) && matchDate(l);
+    }
+    var awaitDate = false;   // 上一行是单独一行的单位名，这一行该带日期来认领它
+    var inSummary = false;
+
+    body.forEach(function(raw, idx){
       var l = raw.trim();
-      if(isSection(l)){ newSection(l.replace(/[【】\[\]■◆●▍▎:：]/g,"").trim()); return; }
+      if(isSection(l)){
+        var title = sectionTitle(l);
+        inSummary = SUMMARY_SEC.test(title);
+        if(!inSummary) newSection(title);
+        awaitDate = false;
+        return;
+      }
+      if(inSummary){ addSummary(l.replace(RE.bullet, "")); return; }
       if(!sec) newSection(T("其他"));
 
-      if(sec.kind === "chip"){ addBullet(l); return; }
+      if(sec.kind === "chip"){ addBullet(l.replace(RE.bullet, "")); return; }
 
       var isBullet = RE.bullet.test(l) || RE.tag.test(l);
       var clean = l.replace(RE.bullet, "");
       var dm = matchDate(clean);
 
+      // 「• 某某大学｜法语专业  2024—至今」：带圆点，但短、日期收尾 —— 是一条经历的标题
+      if(dm && isBullet && !RE.tag.test(clean)){
+        var d0 = fullDate(clean, dm), at = clean.indexOf(d0), before = clean.slice(0, at).trim();
+        if(!clean.slice(at + d0.length).trim() && before && before.length <= 40 && !/[，,;；。:：]/.test(before)) isBullet = false;
+      }
+
       if(dm && !isBullet){
-        var rest = clean.replace(dm[0], " ").replace(/\s{2,}/g," ").trim().replace(/^[|｜,，\-–—]+|[|｜,，\-–—]+$/g,"");
-        if(!rest && en && !en.date){ en.date = esc(dm[0]); return; }   // a lone date line
+        var date = fullDate(clean, dm), shown = esc(date.replace(/\s+/g, " "));
+        var rest = clean.replace(date, " ").replace(/\s{2,}/g," ").trim().replace(/^[|｜,，\-–—&]+|[|｜,，\-–—&]+$/g,"").trim();
+        if(awaitDate){                                                   // 单位名 + 下一行「职位  日期」
+          awaitDate = false;
+          en.date = shown;
+          if(rest && !en.place && isPlace(rest, true)) en.place = esc(rest);        // 「Lyon, France | 2025 – présent」
+          else if(rest){ var r = splitTail(rest); en.sub = esc(r[0]); if(r[1] && !en.place) en.place = esc(r[1]); }
+          return;
+        }
+        if(!rest && en && !en.date){ en.date = shown; return; }        // a lone date line
         var p = splitTail(rest);
-        newEntry(p[0] || rest, dm[0]);
+        newEntry(p[0] || rest, date.replace(/\s+/g, " "));
         if(p[1]) en.place = esc(p[1]);
         return;
       }
+      awaitDate = false;
+      // 单位名独占一行、日期在下一行 —— 最常见的英文版式，也是中文模板里的「单位  城市 / 职位  日期」。
+      // 但上一条经历有日期、还缺副标题时，这一行是它的副标题（「单位 ⇥ 日期 / 学位 ⇥ 城市」版式），不能抢去当下一条的单位
+      var fillsSub = en && en.date && !en.sub && !en.note && !en.bullets.length;
+      if(!isBullet && !fillsSub && isDateLine(body[idx + 1] && body[idx + 1].trim()) &&
+         clean.replace(/\s+/g, " ").length <= 80 && !/[。.;；，,]$/.test(clean)){
+        var o = splitTail(clean);
+        newEntry(o[0], "");
+        if(o[1]) en.place = esc(o[1]);
+        awaitDate = true;
+        return;
+      }
       if(isBullet){ addBullet(clean); return; }
-      if(en && !en.note && !en.bullets.length && /GPA|绩点|排名|均分|学分|荣誉学位/i.test(clean)){
+      if(en && en.sub && !en.note && !en.bullets.length && /GPA|绩点|排名|均分|学分|荣誉学位|moyenne/i.test(clean)){
         en.note = esc(clean); return;                                   // GPA / rank belongs on the note line
       }
       if(en && !en.sub && !en.bullets.length){                          // the line under the title
@@ -1603,9 +1965,13 @@
         if(q[1] && !en.place) en.place = esc(q[1]);
         return;
       }
+      if(en && !en.place && !en.bullets.length && isPlace(clean)){     // 单独一行的城市
+        en.place = esc(clean); return;
+      }
       addBullet(clean);                                                 // never drop a line
     });
 
+    if(summary.length) out.header.summary = esc(summary.reduce(joinText, ""));
     out.sections = out.sections.filter(function(s){ return s.entries.length; });
     if(!out.sections.length) return null;
     return out;
@@ -1626,6 +1992,7 @@
      the main thread — no network, no blob worker (which a strict CSP would block). */
   var PDF_MARK = /^\s*([•·・●○◆■▪*\-–—>]|[【「『\[〔]|\d{1,2}[.、)]\s)/;
   var PDF_END  = /[。！？；;：:]\s*$/;
+  var PDF_LABEL = /^[A-Za-zÀ-ÿ&/ ]{2,30}:\s|^[㐀-鿿A-Za-z/&]{2,8}：/;
 
   function pdfPageLines(tc){
     var rows = [];
@@ -1651,6 +2018,7 @@
         if(CJK.test(prevChar) && CJK.test(nextChar)) return "";
         return " ";
       }
+      var textX = null;   // where the words start, after any bullet glyph
       r.parts.forEach(function(p){
         // pdf.js emits a column gap as its own blank item whose width IS the gap
         if(p.blank){ out += (p.w > r.h * 0.9 ? "\t" : " "); prevEnd = p.x + p.w; return; }
@@ -1659,13 +2027,17 @@
           if(gap > r.h * 0.22) out += sep(gap > r.h * 0.9, p.s.charAt(0));
         }
         if(startX === null) startX = p.x;
+        if(textX === null && !/^[•·・●○◆■▪*\-–—>\s]+$/.test(p.s)) textX = p.x;
         out += p.s; prevEnd = p.x + p.w;
       });
       out = out.replace(/[ \t]+$/,"").replace(/^\s+/,"");
+      // "•<tab>text": the gap after a bullet glyph is its hanging indent, not a column —
+      // left as a tab it makes the line look "structured" and its wrapped tail never rejoins
+      out = out.replace(/^([•·・●○◆■▪*\-–—>])[ \t]+/, "$1 ");
       // A tracked-out heading arrives as "教 育 经 历" — every run is one character.
       // Only that exact shape gets closed up; "市场营销 本科 商学院" is left alone.
       if(/^[㐀-鿿](?: [㐀-鿿])+$/.test(out)) out = out.replace(/ /g, "");
-      return {text: out, x: startX};
+      return {text: out, x: startX, tx: textX === null ? startX : textX};
     }).filter(function(l){ return l.text.trim() !== ""; });
   }
 
@@ -1674,13 +2046,16 @@
     var out = [];
     lines.forEach(function(l){
       var prev = out[out.length - 1];
-      var starts = PDF_MARK.test(l.text) || !!matchDate(l.text);
+      // "IT Skills: …" / "Languages: …" each open a new line even without a bullet
+      var starts = PDF_MARK.test(l.text) || !!matchDate(l.text) || PDF_LABEL.test(l.text) || isSection(l.text);
       // a line holding a column gap is a structured row — complete on its own
       var structured = l.text.indexOf("\t") >= 0 || (prev && prev.text.indexOf("\t") >= 0);
+      // a wrapped bullet continues under its words, not under the bullet glyph
+      var aligned = prev && (Math.abs((l.x || 0) - (prev.x || 0)) < 4 || Math.abs((l.x || 0) - (prev.tx || 0)) < 4);
       var canJoin = prev && !starts && !structured && !PDF_END.test(prev.text) &&
-                    prev.text.length > 24 && Math.abs((l.x || 0) - (prev.x || 0)) < 4;
+                    prev.text.length > 24 && aligned && !isSection(prev.text);
       if(canJoin){
-        var glue = /[A-Za-z0-9)+%]$/.test(prev.text) && /^[A-Za-z0-9(]/.test(l.text) ? " " : "";
+        var glue = /[A-Za-z0-9)+%,.;:!?]$/.test(prev.text) && /^[A-Za-z0-9(]/.test(l.text) ? " " : "";
         prev.text += glue + l.text;
       }else out.push(l);
     });
@@ -1736,15 +2111,48 @@
     var xmlP = hit.method === 0
       ? Promise.resolve(dec.decode(raw))
       : new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
-    return xmlP.then(function(xml){
-      return xml
-        .replace(/<w:tab\b[^>]*>/g, "\t")
-        .replace(/<w:br\b[^>]*>/g, "\n")
-        .replace(/<\/w:p>/g, "\n")
-        .replace(/<[^>]*>/g, "")
-        .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"')
-        .replace(/&apos;/g,"'").replace(/&amp;/g,"&");
-    });
+    return xmlP.then(docxXmlToText);
+  }
+  /* 只取 <w:t> 里的真正文字。整段去标签的老办法会把图片、文本框的坐标（<wp:posOffset>1234567</…>）
+     当成正文，姓名前面就多出一串数字；段落样式里的制表位定义也会被当成 Tab。
+     列表段落（w:numPr / List 样式）在 Word 里没有「•」字符，这里补上，要点才认得出来。
+     表格：一行里各格都只有一段 → 用 Tab 拼成一行（「单位 ⇥ 日期」）；有格子装了多段 → 逐段展开。 */
+  function docxXmlToText(xml){
+    xml = xml.replace(/<mc:Fallback>[\s\S]*?<\/mc:Fallback>/g, "")     // 文本框在 Choice / Fallback 里各存一份
+             .replace(/<w:tabs>[\s\S]*?<\/w:tabs>/g, "")
+             .replace(/<w:(?:delText|instrText)\b[\s\S]*?<\/w:(?:delText|instrText)>/g, "");
+    var unesc = function(s){
+      return s.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"')
+              .replace(/&apos;/g,"'").replace(/&#(\d+);/g, function(_, n){ return String.fromCharCode(+n); })
+              .replace(/&amp;/g,"&");
+    };
+    var lines = [], para = null, pStack = [], rows = [], cells = [];
+    var re = /<w:t(?:\s[^>]*)?>([^<]*)<\/w:t>|<w:(tab|br|cr)\b[^>]*\/>|<w:numPr>|<w:pStyle w:val="([^"]*)"|<(\/?)w:(p|tc|tr)(?=[\s>\/])[^>]*?(\/?)>/g, m;
+    function emit(t){ if(cells.length) cells[cells.length - 1].push(t); else lines.push(t); }
+    while((m = re.exec(xml))){
+      if(m[1] !== undefined){ if(para) para.t += unesc(m[1]); }
+      else if(m[2]){ if(para) para.t += m[2] === "tab" ? "\t" : "\n"; }
+      else if(m[0] === "<w:numPr>"){ if(para) para.list = true; }
+      else if(m[3] !== undefined){ if(para && /^List|列表/i.test(m[3])) para.list = true; }
+      else if(m[5] === "p"){
+        if(m[4]){ if(para){ var t = para.t.trim() ? (para.list ? "• " : "") + para.t : ""; para = pStack.pop() || null; emit(t); } }
+        else if(m[6]){ emit(""); }                                           // <w:p/>
+        else { if(para) pStack.push(para); para = {t:"", list:false}; }
+      }
+      else if(m[5] === "tc"){
+        if(m[4]){ var paras = cells.pop().filter(function(s){ return s.trim(); }); if(rows.length) rows[rows.length - 1].push(paras); }
+        else if(!m[6]) cells.push([]);
+      }
+      else if(m[5] === "tr"){
+        if(m[4]){
+          var row = rows.pop().filter(function(c){ return c.length; });
+          if(row.every(function(c){ return c.length === 1; })) emit(row.map(function(c){ return c[0]; }).join("\t"));
+          else row.forEach(function(c){ c.forEach(emit); });
+        }
+        else if(!m[6]) rows.push([]);
+      }
+    }
+    return lines.join("\n");
   }
 
   /* ---------- saved versions ---------- */
@@ -1871,11 +2279,24 @@
   /* ---------- render ---------- */
   var paper = document.getElementById("paper");
 
+  function isCard(){ return S.opts.layout === "card"; }
+  // 卡片版式里一个板块落在哪一栏：显式挪过（⇆）就听它的，否则教育 / 技能 / 语言 / 标签类进侧栏
+  function isSide(sec){
+    if(sec.side === true || sec.side === false) return sec.side;
+    return sec.kind === "chip" || sec.kind === "matrix" ||
+      /教育|学历|技能|语言|证书|education|formation|skill|language|langue|certif/i.test(strip(sec.title));
+  }
+
   function render(focus){
     normData(S.data);
     paper.innerHTML = "";
-    paper.appendChild(headerEl());
-    S.data.sections.forEach(function(sec, si){ paper.appendChild(sectionEl(sec, si)); });
+    paper.dataset.layout = isCard() ? "card" : "classic";
+    if(isCard()){
+      renderCard();
+    }else{
+      paper.appendChild(headerEl());
+      S.data.sections.forEach(function(sec, si){ paper.appendChild(sectionEl(sec, si)); });
+    }
     var addSecs = el("div","add-secs");
     addSecs.appendChild(addBtn(T("＋ 新板块"),"add-sec", function(){
       S.data.sections.push({title:T("新板块"), kind:"entry", entries:[blankEntry()]});
@@ -1889,6 +2310,13 @@
       ]});
       render("sections." + (S.data.sections.length-1) + ".title"); save();
     }, T("左边一个纯色标签框，右边跟一行内容 —— 语言、工具、证书这类")));
+    // 矩阵：一行一个职能，右边彩色圆点标出处 —— 卡片版式的侧栏用得最多，经典版式也能放
+    addSecs.appendChild(addBtn(T("＋ 矩阵板块"),"add-sec", function(){
+      S.data.sections.push({title:T("职能覆盖"), kind:"matrix",
+        legend:[{name:T("公司 A")}, {name:T("公司 B")}],
+        entries:[{label:T("活动 / 展会"), marks:[0]}, {label:T("内容 / 社媒"), marks:[1]}]});
+      render("sections." + (S.data.sections.length-1) + ".title"); save();
+    }, T("一行一个职能，右边用彩色圆点标出在哪段经历里做过")));
     paper.appendChild(addSecs);
     bind();
     applyMode();
@@ -1896,11 +2324,7 @@
     if(focus) focusPath(focus);
   }
 
-  function headerEl(){
-    var hd = el("div","hd");
-
-    var main = el("div","hd-main");
-    main.appendChild(ed("div","nm","header.name",T("姓名")));
+  function contactsEl(){
     var cts = el("div","cts" + (S.opts.oneLine ? " oneline" : ""));
     S.data.header.contacts.forEach(function(c, i){
       var row = el("div","ct" + (strip(c.text).trim() ? "" : " empty"));
@@ -1924,7 +2348,45 @@
       row.appendChild(x);
       cts.appendChild(row);
     });
-    main.appendChild(cts);
+    return cts;
+  }
+  function photoWrapEl(){
+    var wrap = el("div","photo-wrap" + (photoHidden() ? " off" : ""));
+    var img = document.createElement("img");
+    img.className = "photo"; img.alt = T("证件照");
+    img.src = S.data.header.photo || "";
+    img.addEventListener("click", function(){ if(S.mode === "edit") pickPhoto(); });
+    wrap.appendChild(img);
+    var swap = el("button","photo-swap",T("更换照片"));
+    swap.type = "button";
+    swap.addEventListener("click", function(e){ e.preventDefault(); pickPhoto(); });
+    wrap.appendChild(swap);
+    return wrap;
+  }
+  // 空着就彻底消失、按「＋」才现身的那类字段（简介、定位语、副名）共用一套开关
+  function revealable(node, path, label){
+    var btn = addBtn(label, "", function(){
+      node.classList.add("show");
+      btn.style.display = "none";
+      caretTo(node);
+    });
+    if(strip(get(path) || "").trim()) btn.style.display = "none";
+    node.addEventListener("blur", function(){
+      if(strip(node.innerHTML).trim()) return;
+      node.innerHTML = "";
+      node.classList.remove("show");
+      btn.style.display = "";
+      set(path, ""); save();
+    });
+    return btn;
+  }
+
+  function headerEl(){
+    var hd = el("div","hd");
+
+    var main = el("div","hd-main");
+    main.appendChild(ed("div","nm","header.name",T("姓名")));
+    main.appendChild(contactsEl());
 
     // 姓名下方的自述：和备注一个路子 —— 空着就彻底消失，按「＋ 简介」才现身
     var sum = ed("div","sum","header.summary", T("一句话概括：学历与专业、几段经历、语言或技能"));
@@ -1952,16 +2414,7 @@
     adds.appendChild(sumBtn);
     main.appendChild(adds);
 
-    var wrap = el("div","photo-wrap" + (photoHidden() ? " off" : ""));
-    var img = document.createElement("img");
-    img.className = "photo"; img.alt = T("证件照");
-    img.src = S.data.header.photo || "";
-    img.addEventListener("click", function(){ if(S.mode === "edit") pickPhoto(); });
-    wrap.appendChild(img);
-    var swap = el("button","photo-swap",T("更换照片"));
-    swap.type = "button";
-    swap.addEventListener("click", function(e){ e.preventDefault(); pickPhoto(); });
-    wrap.appendChild(swap);
+    var wrap = photoWrapEl();
 
     // build the row in visual order, so photo-left and photo-right stay symmetric
     // always present when centring is on; applyStyle hides it in step with the photo
@@ -1974,6 +2427,240 @@
       hd.appendChild(main); hd.appendChild(wrap);
     }
     return hd;
+  }
+
+  /* ---------- 卡片版式 ---------- */
+  function renderCard(){
+    paper.appendChild(cardHeaderEl());
+    var st = statsEl(); if(st) paper.appendChild(st);
+    var toc = tocEl(); if(toc) paper.appendChild(toc);
+    var grid = el("div","cgrid"), side = el("div","cside"), main = el("div","cmain");
+    S.data.sections.forEach(function(sec, si){
+      (isSide(sec) ? side : main).appendChild(sectionEl(sec, si));
+    });
+    var q = qrEl(); if(q) side.appendChild(q);
+    grid.appendChild(side); grid.appendChild(main);
+    paper.appendChild(grid);
+  }
+
+  function cardHeaderEl(){
+    var h = S.data.header;
+    var hd = el("div","hd");
+    var row = el("div","chd");
+    var main = el("div","chd-main");
+    var nr = el("div","nm-row");
+    nr.appendChild(ed("div","nm","header.name",T("姓名")));
+    var alt = ed("span","nm-alt","header.nameAlt",T("副名，比如另一种语言的名字"));
+    nr.appendChild(alt);
+    main.appendChild(nr);
+    var tg = ed("div","tg","header.tagline",T("一句话定位：你是谁、凭什么"));
+    main.appendChild(tg);
+    var sum = ed("div","sum","header.summary",T("两三行简介：学历、几段经历、覆盖哪些方向"));
+    main.appendChild(sum);
+
+    var adds = el("div","hd-adds");
+    adds.appendChild(revealable(alt, "header.nameAlt", T("＋ 副名")));
+    adds.appendChild(revealable(tg, "header.tagline", T("＋ 定位语")));
+    adds.appendChild(revealable(sum, "header.summary", T("＋ 简介")));
+    adds.appendChild(addBtn(T("＋ 联系方式"),"", function(){
+      h.contacts.push({type:"cell", text:T("新的联系方式")});
+      render("header.contacts." + (h.contacts.length-1) + ".text"); save();
+    }));
+    if(!(h.stats && h.stats.length)){
+      adds.appendChild(addBtn(T("＋ 数字条"),"", function(){
+        h.stats = [{num:"",unit:"",label:""},{num:"",unit:"",label:""},{num:"",unit:"",label:""}];
+        render("header.stats.0.num"); save();
+      }, T("姓名下面一排大数字，3 秒内让人看到结果")));
+    }
+    main.appendChild(adds);
+    row.appendChild(main);
+    row.appendChild(photoWrapEl());
+    hd.appendChild(row);
+    hd.appendChild(contactsEl());
+    return hd;
+  }
+
+  function statsEl(){
+    var arr = S.data.header.stats;
+    if(!arr || !arr.length) return null;
+    var box = el("div","stats");
+    box.style.setProperty("--stat-n", arr.length);
+    arr.forEach(function(st, i){
+      var b = "header.stats." + i;
+      var c = el("div","stat");
+      c.appendChild(toolbar([
+        tool("←",T("左移"),"", function(){ move(arr, i, -1); render(); save(); }),
+        tool("→",T("右移"),"", function(){ move(arr, i, 1); render(); save(); }),
+        tool("×",T("删除这个数字"),"del", function(){ arr.splice(i, 1); render(); save(); })
+      ]));
+      var n = el("div","stat-n");
+      n.appendChild(ed("span","stat-v", b + ".num", "00"));
+      n.appendChild(ed("span","stat-u", b + ".unit", "+"));
+      c.appendChild(n);
+      c.appendChild(ed("div","stat-l", b + ".label", T("这个数字说明什么")));
+      box.appendChild(c);
+    });
+    if(arr.length < 6){
+      box.appendChild(addBtn(T("＋ 数字"),"stats-add", function(){
+        arr.push({num:"",unit:"",label:""});
+        render("header.stats." + (arr.length-1) + ".num"); save();
+      }));
+    }
+    return box;
+  }
+
+  // 目录：主栏里每段经历一颗胶囊，点了跳过去（打印成 PDF 后也能点）。短名默认取单位名，可以直接在胶囊里改
+  function tocEl(){
+    if(!S.opts.cardToc) return null;
+    var items = [];
+    S.data.sections.forEach(function(sec, si){
+      if(isSide(sec) || (sec.kind && sec.kind !== "entry")) return;
+      (sec.entries || []).forEach(function(en, ei){ items.push([si, ei, en]); });
+    });
+    if(!items.length) return null;
+    var nav = el("nav","toc");
+    nav.appendChild(ed("span","toc-l","header.tocLabel",T("目录标题")));
+    items.forEach(function(it, k){
+      var a = el("a");
+      a.href = "#case-" + it[0] + "-" + it[1];
+      a.appendChild(el("b", null, (k < 9 ? "0" : "") + (k + 1)));
+      var t = ed("span","toc-t","sections." + it[0] + ".entries." + it[1] + ".toc", T("短名"));
+      if(!strip(it[2].toc || "").trim()) t.textContent = strip(it[2].org || "").trim();
+      a.appendChild(t);
+      a.addEventListener("click", function(e){ if(S.mode === "edit") e.preventDefault(); });
+      nav.appendChild(a);
+    });
+    return nav;
+  }
+
+  function qrEl(){
+    if(!S.opts.cardQR || typeof qrcode !== "function") return null;
+    var list = (S.data.header.contacts || []).filter(function(c){
+      return (c.type === "link" || c.type === "web") && strip(c.text).trim();
+    });
+    if(!list.length) return null;
+    var box = el("div","qrs");
+    list.slice(0, 2).forEach(function(c){
+      var url = strip(c.text).trim();
+      if(!/^https?:\/\//i.test(url)) url = "https://" + url.replace(/^\/+/, "");
+      var q;
+      try{ q = qrcode(0, "M"); q.addData(url); q.make(); }catch(err){ return; }
+      var a = el("a","qr");
+      a.href = url;
+      a.innerHTML = q.createSvgTag({cellSize:2, margin:0, scalable:true});
+      // 纸面上的字跟着正文语言走，不跟界面语言 —— 界面语言只动界面
+      var host = url.replace(/^https?:\/\//i, "").split("/")[0].replace(/^www\./i, "");
+      var name = /linkedin\./i.test(host) ? "LinkedIn" : /github\./i.test(host) ? "GitHub" : host;
+      var sp = el("span");
+      sp.appendChild(el("b", null, name));
+      sp.appendChild(document.createTextNode(S.opts.lang === "en" ? "scan to view" : "扫码查看"));
+      a.appendChild(sp);
+      a.addEventListener("click", function(e){ if(S.mode === "edit") e.preventDefault(); });
+      box.appendChild(a);
+    });
+    return box.children.length ? box : null;
+  }
+
+  function kpiEl(en, base){
+    var k = en.kpi;
+    if(!k) return null;
+    var has = strip(k.num || "").trim() || strip(k.unit || "").trim() || strip(k.label || "").trim();
+    if(!has && !shownFields[base + ".kpi"]) return null;
+    var box = el("div","kpi");
+    var n = el("div","kpi-n");
+    n.appendChild(ed("span","kpi-v", base + ".kpi.num", "600"));
+    n.appendChild(ed("span","kpi-u", base + ".kpi.unit", "+"));
+    box.appendChild(n);
+    box.appendChild(ed("div","kpi-l", base + ".kpi.label", T("KPI 说明")));
+    box.appendChild(tool("×",T("删除 KPI"),"del kpi-del", function(){
+      delete en.kpi; delete shownFields[base + ".kpi"]; render(); save();
+    }));
+    return box;
+  }
+
+  /* 要点开头的小标题 —— 【区域获客】、「媒体投放管理」、Field marketing: —— 在卡片版式里画成色块。
+     只改显示：括号 / 冒号在显示时摘掉，输入时原样装回去，数据里的原文一个字不动，切回经典版式照旧。 */
+  var TAG_BR = /^(\s*)<(strong|b)>\s*([【「\[])([\s\S]*?)([】」\]])\s*<\/\2>(\s*)/;
+  var TAG_CO = /^(\s*)<(strong|b)>([^<]*?)\s*([:：])\s*<\/\2>(\s*)/;
+  function tagify(box, html){
+    var m = html.match(TAG_BR), L, R, inner, tag, sp;
+    if(m){ L = m[3]; R = m[5]; inner = m[4]; tag = m[2]; sp = m[6]; }
+    else{
+      m = html.match(TAG_CO);
+      if(!m) return;
+      L = ""; R = m[4]; inner = m[3]; tag = m[2]; sp = m[5];
+    }
+    if(!strip(inner).trim()) return;
+    box.innerHTML = "<" + tag + ">" + inner + "</" + tag + ">" + html.slice(m[0].length);
+    box.classList.add("tagged");
+    box.dataset.tagL = L; box.dataset.tagR = R; box.dataset.tagSp = sp;
+  }
+  function untag(box, html){
+    if(!box.classList.contains("tagged")) return html;
+    var m = html.match(/^(\s*)<(strong|b)>([\s\S]*?)<\/\2>\s*/);
+    if(!m || !strip(m[3]).trim()) return html;      // 小标题整个删掉了：剩下的原样存
+    return "<" + m[2] + ">" + box.dataset.tagL + m[3] + box.dataset.tagR + "</" + m[2] + ">" +
+           (box.dataset.tagSp || "") + html.slice(m[0].length);
+  }
+
+  var MX_COLORS = ["var(--rail)", "#c3c9d4", "var(--ink)", "#8fa3d9", "#d9a441"];
+  function matrixBody(sec, si, s){
+    var lg = sec.legend || [];
+    (sec.entries || []).forEach(function(en, ei){
+      var base = "sections." + si + ".entries." + ei;
+      var r = el("div","entry mx-row");
+      r.appendChild(toolbar([
+        grip("entry", si, ei),
+        tool("↑",T("上移"),"", function(){ move(sec.entries, ei, -1); render(); save(); }),
+        tool("↓",T("下移"),"", function(){ move(sec.entries, ei, 1); render(); save(); }),
+        tool("×",T("删除"),"del", function(){ sec.entries.splice(ei, 1); render(); save(); })
+      ]));
+      r.appendChild(ed("div","mx-l", base + ".label", T("职能")));
+      var dots = el("span","mx-dots");
+      lg.forEach(function(L, li){
+        var on = (en.marks || []).indexOf(li) >= 0;
+        var d = el("button","mx-dot" + (on ? "" : " off"));
+        d.type = "button";
+        d.style.setProperty("--dc", MX_COLORS[li % MX_COLORS.length]);
+        d.title = strip(L.name) || T("点一下标上 / 取消");
+        d.setAttribute("aria-label", d.title);
+        d.addEventListener("click", function(e){
+          e.preventDefault();
+          if(S.mode !== "edit") return;
+          var m = en.marks || (en.marks = []);
+          var k = m.indexOf(li);
+          if(k >= 0) m.splice(k, 1); else { m.push(li); m.sort(); }
+          render(); save();
+        });
+        dots.appendChild(d);
+      });
+      r.appendChild(dots);
+      s.appendChild(r);
+    });
+    var key = el("div","mx-key");
+    lg.forEach(function(L, li){
+      var k = el("span","mx-k");
+      var i = el("i"); i.style.setProperty("--dc", MX_COLORS[li % MX_COLORS.length]);
+      k.appendChild(i);
+      k.appendChild(ed("span","", "sections." + si + ".legend." + li + ".name", T("来源")));
+      k.appendChild(tool("×",T("删除这个图例"),"del", function(){
+        lg.splice(li, 1);
+        (sec.entries || []).forEach(function(en){
+          en.marks = (en.marks || []).filter(function(x){ return x !== li; })
+                                     .map(function(x){ return x > li ? x - 1 : x; });
+        });
+        render(); save();
+      }));
+      key.appendChild(k);
+    });
+    if(lg.length < MX_COLORS.length){
+      key.appendChild(addBtn(T("＋ 图例"),"mx-add", function(){
+        if(!sec.legend) sec.legend = [];
+        sec.legend.push({name:T("新来源")});
+        render("sections." + si + ".legend." + (sec.legend.length-1) + ".name"); save();
+      }));
+    }
+    s.appendChild(key);
   }
 
   function closePicker(){
@@ -2008,11 +2695,13 @@
 
   function sectionEl(sec, si){
     var s = el("div","sec");
+    s.dataset.si = si;
 
     var head = el("div","sec-head");
     head.appendChild(ed("div","sec-t","sections." + si + ".title",T("板块名称")));
     head.appendChild(toolbar([
       grip("sec", si),
+      isCard() ? tool("⇆",T("挪到另一栏"),"", function(){ sec.side = !isSide(sec); render(); save(); }) : null,
       tool("↑",T("上移板块"),"", function(){ move(S.data.sections, si, -1); render(); save(); }),
       tool("↓",T("下移板块"),"", function(){ move(S.data.sections, si, 1); render(); save(); }),
       tool("×",T("删除板块"),"del", function(){
@@ -2021,14 +2710,18 @@
     ]));
     s.appendChild(head);
 
-    head.appendChild(addBtn(T(sec.kind === "chip" ? "＋ 新的一行" : "＋ 新条目"),"add-entry", function(){
-      sec.entries.push(sec.kind === "chip" ? {label:T("标签："), text:T("内容")} : blankEntry());
-      render("sections." + si + ".entries." + (sec.entries.length-1) + (sec.kind === "chip" ? ".label" : ".org"));
+    head.appendChild(addBtn(T(sec.kind === "chip" || sec.kind === "matrix" ? "＋ 新的一行" : "＋ 新条目"),"add-entry", function(){
+      sec.entries.push(sec.kind === "chip" ? {label:T("标签："), text:T("内容")}
+                     : sec.kind === "matrix" ? {label:T("新职能"), marks:[]} : blankEntry());
+      render("sections." + si + ".entries." + (sec.entries.length-1) +
+             (sec.kind === "chip" ? ".label" : sec.kind === "matrix" ? ".label" : ".org"));
       save();
     }));
 
+    if(sec.kind === "matrix"){ matrixBody(sec, si, s); return s; }
+    var mode = !isCard() ? "classic" : isSide(sec) ? "side" : "case";
     sec.entries.forEach(function(en, ei){
-      s.appendChild(sec.kind === "chip" ? chipEl(en, si, ei) : entryEl(en, si, ei));
+      s.appendChild(sec.kind === "chip" ? chipEl(en, si, ei) : entryEl(en, si, ei, mode));
     });
     return s;
   }
@@ -2089,7 +2782,8 @@
     setTimeout(function(){ b.textContent = face; b.title = title; }, 1400);
   }
 
-  function entryEl(en, si, ei){
+  function entryEl(en, si, ei, mode){
+    mode = mode || "classic";
     var base = "sections." + si + ".entries." + ei;
     var e = el("div","entry");
 
@@ -2109,27 +2803,63 @@
     var on = {org:fieldOn(P.org,en.org), date:fieldOn(P.date,en.date),
               sub:fieldOn(P.sub,en.sub), place:fieldOn(P.place,en.place)};
 
-    if(on.org || on.date){
-      var r1 = el("div","row");
-      r1.appendChild(on.org ? field("l r-org", P.org, T("单位 / 学校"), "right") : el("div","l"));
-      if(on.date) r1.appendChild(field("r", P.date, T("起止时间"), "out"));
-      e.appendChild(r1);
-    }
-    if(on.sub || on.place){
-      var r2 = el("div","row r-sub");
-      r2.appendChild(on.sub ? field("l", P.sub, T("岗位 / 专业"), "right") : el("div","l"));
-      if(on.place) r2.appendChild(field("r", P.place, T("城市"), "out"));
-      e.appendChild(r2);
+    if(mode === "side"){
+      // 侧栏窄：单位 / 岗位专业 / 时间 · 城市 竖着排
+      var s1 = el("div","s-l1row");
+      if(on.org) s1.appendChild(field("s-l1 r-org", P.org, T("单位 / 学校"), "right"));
+      e.appendChild(s1);
+      if(on.sub) e.appendChild(field("s-l2", P.sub, T("岗位 / 专业"), "right"));
+      if(on.date || on.place){
+        var l3 = el("div","s-l3");
+        if(on.date) l3.appendChild(field("", P.date, T("起止时间"), "out"));
+        if(on.place) l3.appendChild(field("", P.place, T("城市"), "out"));
+        e.appendChild(l3);
+      }
+    }else if(mode === "case"){
+      // 主栏案例卡：单位 + 岗位一行，时间 · 城市一行，右边一个 KPI 大数字
+      e.classList.add("case");
+      e.id = "case-" + si + "-" + ei;
+      var ch = el("div","case-h"), ci = el("div","case-i");
+      var c1 = el("div","c-l1");
+      if(on.org) c1.appendChild(field("r-org", P.org, T("单位 / 学校"), "right"));
+      if(on.sub) c1.appendChild(field("c-sub", P.sub, T("岗位 / 专业"), "right"));
+      ci.appendChild(c1);
+      if(on.date || on.place){
+        var c2 = el("div","c-l2");
+        if(on.date) c2.appendChild(field("", P.date, T("起止时间"), "out"));
+        if(on.place) c2.appendChild(field("", P.place, T("城市"), "out"));
+        ci.appendChild(c2);
+      }
+      ch.appendChild(ci);
+      var kp = kpiEl(en, base);
+      if(kp) ch.appendChild(kp);
+      e.appendChild(ch);
+    }else{
+      if(on.org || on.date){
+        var r1 = el("div","row");
+        r1.appendChild(on.org ? field("l r-org", P.org, T("单位 / 学校"), "right") : el("div","l"));
+        if(on.date) r1.appendChild(field("r", P.date, T("起止时间"), "out"));
+        e.appendChild(r1);
+      }
+      if(on.sub || on.place){
+        var r2 = el("div","row r-sub");
+        r2.appendChild(on.sub ? field("l", P.sub, T("岗位 / 专业"), "right") : el("div","l"));
+        if(on.place) r2.appendChild(field("r", P.place, T("城市"), "out"));
+        e.appendChild(r2);
+      }
     }
 
     var note = ed("div","note", base + ".note",T("比如 GPA、排名、荣誉"));
-    e.appendChild(note);
+    // 侧栏里短备注（开源 / 已上线 / GPA 这类）挂在单位名后面当小徽章，省一行
+    if(mode === "side" && strip(en.note || "").trim().length <= 24) s1.appendChild(note);
+    else e.appendChild(note);
 
     var ul = el("ul","bl");
     (en.bullets || []).forEach(function(b, bi){
       var li = el("li","bl-item" + (b.lv === 2 ? " sub" : ""));
       var box = ed("div","bl-in", base + ".bullets." + bi + ".t", T("写一条成果"));
       box.dataset.bullet = si + "," + ei + "," + bi;
+      if(mode === "case" && S.opts.cardTags !== false) tagify(box, b.t || "");
       li.appendChild(box);
       var bg = grip("bullet", si, ei, bi);
       bg.classList.add("bl-grip");
@@ -2154,6 +2884,14 @@
           render(P[f[1]]); save();
         }));
       });
+
+    if(mode === "case" && !kp){
+      addRow.appendChild(addBtn(T("＋ KPI"),"", function(){
+        if(!en.kpi) en.kpi = {num:"", unit:"", label:""};
+        shownFields[base + ".kpi"] = 1;
+        render(base + ".kpi.num"); save();
+      }));
+    }
 
     addRow.appendChild(addBtn(T("＋ 要点"),"", function(){
       var bs = S.data.sections[si].entries[ei].bullets;
@@ -2207,15 +2945,21 @@
     if(S.mode !== "edit" || e.button !== 0) return;
     e.preventDefault();
 
-    var secs = [].slice.call(paper.querySelectorAll(".sec"));
+    // 按数据下标找板块：卡片版式里侧栏、主栏各排各的，DOM 顺序不等于数据顺序
+    var secEl = paper.querySelector('.sec[data-si="' + si + '"]');
+    if(!secEl) return;
     var items, from;
     if(kind === "sec"){
-      items = secs; from = si;
+      // 只在同一栏里换位置
+      items = [].slice.call(secEl.parentNode.children).filter(function(n){
+        return n.classList && n.classList.contains("sec");
+      });
+      from = items.indexOf(secEl);
     }else if(kind === "entry"){
-      items = [].slice.call(secs[si].querySelectorAll(".entry")); from = ei;
+      items = [].slice.call(secEl.querySelectorAll(".entry")); from = ei;
     }else{
       // 要点只在自己这条经历里换位置：跨条目搬要点几乎总是误操作
-      items = [].slice.call(secs[si].querySelectorAll(".entry")[ei].querySelectorAll(".bl li"));
+      items = [].slice.call(secEl.querySelectorAll(".entry")[ei].querySelectorAll(".bl li"));
       from = bi;
     }
     var src = items[from];
@@ -2255,8 +2999,17 @@
 
       var dest = to > from ? to - 1 : to;
       if(dest === from) return;
-      var arr = kind === "sec"   ? S.data.sections
-              : kind === "entry" ? S.data.sections[si].entries
+      if(kind === "sec"){
+        // 这一栏占着的数据槽位不变，按新顺序把板块填回去
+        var order = items.map(function(n){ return Number(n.dataset.si); });
+        var slots = order.slice().sort(function(a, b){ return a - b; });
+        order.splice(dest, 0, order.splice(from, 1)[0]);
+        var was = S.data.sections.slice();
+        slots.forEach(function(slot, k){ S.data.sections[slot] = was[order[k]]; });
+        render(); save();
+        return;
+      }
+      var arr = kind === "entry" ? S.data.sections[si].entries
               :                    S.data.sections[si].entries[ei].bullets;
       arr.splice(dest, 0, arr.splice(from, 1)[0]);
       render(); save();
@@ -2298,7 +3051,7 @@
   function bind(){
     paper.querySelectorAll(".ed").forEach(function(n){
       n.addEventListener("input", function(){
-        set(n.dataset.path, clean(n.innerHTML));
+        set(n.dataset.path, untag(n, clean(n.innerHTML)));
         if(n.dataset.path.indexOf(".bullets.") > 0){
           var ent = n.closest(".entry"), cb = ent && ent.querySelector(".copy-bl");
           if(cb) cb.hidden = ![].slice.call(ent.querySelectorAll(".bl-in"))
@@ -2351,7 +3104,7 @@
         arr.splice(Number(b[2]) + 1, 0, {t:"", lv:(cur && cur.lv === 2) ? 2 : 1});
         render("sections." + b[0] + ".entries." + b[1] + ".bullets." + (Number(b[2]) + 1) + ".t");
         save();
-      }else if(n.classList.contains("note") || n.classList.contains("chip-txt")){
+      }else if(n.classList.contains("note") || n.classList.contains("chip-txt") || n.classList.contains("stat-l")){
         e.preventDefault();
         document.execCommand("insertLineBreak");
       }else{
@@ -2454,6 +3207,13 @@
     var cts = paper.querySelector(".cts");
     if(cts) cts.classList.toggle("oneline", !!S.opts.oneLine);
     paper.dataset.hstyle = S.opts.hstyle || "band";
+    paper.dataset.layout = isCard() ? "card" : "classic";
+    paper.dataset.sidepos = S.opts.sidePos || "left";
+    paper.dataset.photoside = S.opts.photoSide || "right";
+    paper.dataset.chip = S.opts.chip || "auto";
+    paper.dataset.crail = S.opts.cardRail !== false ? "1" : "0";
+    paper.dataset.cnums = S.opts.cardNums !== false ? "1" : "0";
+    paper.style.setProperty("--photo-ratio", S.opts.photoRatio || "5/6");
     paper.dataset.font = S.opts.font || "sans";
     paper.dataset.lang = S.opts.lang || "zh";
     var latin = LATIN_FONT[S.opts.latin] || "";
@@ -3010,7 +3770,43 @@
     photoOn.checked = !!S.opts.photoOn;
     syncPhotoSide();
     syncStyleUI();
+    syncLayoutUI();
   }
+
+  /* ---------- 版式模板：经典单栏 / 卡片双栏 ---------- */
+  var CARD_CHK = [["c-toc","cardToc"],["c-nums","cardNums"],["c-rail","cardRail"],["c-tags","cardTags"],["c-qr","cardQR"]];
+  function syncLayoutUI(){
+    pressGroup("#layoutsel", "lay", S.opts.layout || "classic");
+    document.getElementById("card-opts").hidden = !isCard();
+    pressGroup("#sidepos", "sp", S.opts.sidePos || "left");
+    pressGroup("#pratio", "r", S.opts.photoRatio || "5/6");
+    CARD_CHK.forEach(function(c){ document.getElementById(c[0]).checked = S.opts[c[1]] !== false; });
+  }
+  document.getElementById("layoutsel").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    var want = b.dataset.lay;
+    if(want === (S.opts.layout || "classic")) return;
+    S.opts.layout = want;
+    // 两套版式各有一个顺眼的默认标题样式；用户自己挑过别的就不动
+    if(want === "card" && (S.opts.hstyle || "band") === "band") S.opts.hstyle = "tail";
+    if(want === "classic" && S.opts.hstyle === "tail") S.opts.hstyle = "band";
+    if(want === "card" && S.data.header.tocLabel == null) S.data.header.tocLabel = T("本页案例");
+    syncLayoutUI(); syncStyleUI(); render(); applyStyle(); save();
+  });
+  document.getElementById("sidepos").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    S.opts.sidePos = b.dataset.sp; syncLayoutUI(); applyStyle(); save();
+  });
+  document.getElementById("pratio").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    S.opts.photoRatio = b.dataset.r; syncLayoutUI(); applyStyle(); save();
+  });
+  CARD_CHK.forEach(function(c){
+    document.getElementById(c[0]).addEventListener("change", function(e){
+      S.opts[c[1]] = e.target.checked;
+      render(); applyStyle(); save();
+    });
+  });
 
   function pressGroup(sel, attr, val){
     document.querySelectorAll(sel + " button").forEach(function(b){
@@ -3053,6 +3849,7 @@
   });
   syncStyleUI();
   syncPhotoSide();
+  syncLayoutUI();
 
   document.getElementById("photo-swap").addEventListener("click", function(){
     S.opts.photoOn = true; photoOn.checked = true;
@@ -3158,6 +3955,25 @@
   }
   function restoreFrom(text){
     var o = JSON.parse(text);
+    // 只有一份草稿（「备份数据（文本）」那种格式）：当成草稿载入，版本列表一个不动；
+    // 载入前先把当前草稿存成一版，想退回就在版本列表里点它
+    if(o && !o.app && o.data && o.style){
+      var keep = {id:"v" + Date.now(), name:T("载入前备份 {0}", stamp(Date.now())),
+                  at:Date.now(), state:snapshot()};
+      versions.unshift(keep);
+      saveVersions();
+      var prev = S;
+      S = o;
+      Object.keys(PRESETS.normal).forEach(function(k){ if(S.style[k] == null) S.style[k] = PRESETS.normal[k]; });
+      S.opts = Object.assign({}, DEF_OPTS, S.opts || {});
+      S.zoom = S.zoom || prev.zoom || 100; S.mode = "edit"; S.activeId = null;
+      if(S.panelW == null) S.panelW = prev.panelW;
+      render(); applyStyle(); applyMode(); syncOpts(); renderVersions(); applyPanelWidth(); save();
+      document.getElementById("zoom").value = S.zoom;
+      document.getElementById("zoom-o").textContent = S.zoom + "%";
+      document.getElementById("guides").checked = !!S.guides;
+      return {keep:keep.name};
+    }
     if(!o || o.app !== "resume-desk" || !o.draft) throw new Error(T("这不是 CV Maker 的备份文件"));
     S = o.draft;
     Object.keys(PRESETS.normal).forEach(function(k){ if(S.style[k] == null) S.style[k] = PRESETS.normal[k]; });
@@ -3230,7 +4046,9 @@
     if(!f) return;
     f.text().then(function(t){
       var n = restoreFrom(t);
-      fileMsg.textContent = T("已从 {0} 恢复：草稿 + {1} 个版本。", f.name, n);
+      fileMsg.textContent = (n && n.keep)
+        ? T("已从 {0} 载入草稿，版本列表没动；原来的草稿存成了「{1}」。", f.name, n.keep)
+        : T("已从 {0} 恢复：草稿 + {1} 个版本。", f.name, n);
     }).catch(function(err){
       fileMsg.textContent = T("读不了这个文件：{0}", err.message);
     });
